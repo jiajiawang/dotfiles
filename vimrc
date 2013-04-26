@@ -25,6 +25,8 @@ Bundle 'scrooloose/syntastic'
 Bundle 'wincent/Command-T'
 Bundle 'majutsushi/tagbar'
 Bundle 'skammer/vim-css-color'
+Bundle 'matchit.zip'
+Bundle 'Align'
 
 filetype plugin indent on     " required!
 "
@@ -40,10 +42,23 @@ filetype plugin indent on     " required!
 " color scheme
 colorscheme slate
 
+" Save backups to a less annoying place
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir=~/.vim/backup
+set backup
+
+" Save swaps to a less annoying place
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=~/.vim/swap
+
+
 set backspace=indent,eol,start  "allow backspacing over everything in insert mode
 set showcmd                     "show incomplete cmds down the bottom
 set showmode                    "show current mode down the bottom
-set nobackup                    "don't backup files
 
 set incsearch                   "find the next search as we type the search
 set hlsearch                    "highlight searchs
@@ -59,6 +74,8 @@ set ruler
 set terse
 set scrolloff=5
 
+" Turn on syntax highlighting
+syn on
 
 " always show tabs in gvim, but not vim
 " and show tab number in tab label
@@ -68,15 +85,24 @@ au VimEnter * set guitablabel=%N)\ %M%t
 " autosave everything when losing focus, ignore warnings from untitled buffers
 au FocusLost * silent! wa
 
+let g:CommandTMaxHeight=20
+
 " mapping
 let mapleader=","
 
-let g:CommandTMaxHeight=20
+vmap <leader>a :Align >= = , :<cr>
+map <leader>a :Align => = , :<cr>
 
+" key maps
 nnoremap <f1> :NERDTreeToggle<cr>
 nnoremap <f2> :TagbarToggle<cr>
 
-" key maps
+" Shifting blocks visually
+nnoremap <Tab> >>_
+nnoremap <S-Tab> <<_
+inoremap <S-Tab> <C-D>
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
