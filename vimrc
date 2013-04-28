@@ -18,7 +18,10 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'msanders/snipmate.vim'
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
+Bundle "honza/vim-snippets"
+Bundle "garbas/vim-snipmate"
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
@@ -27,6 +30,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'skammer/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
+Bundle 'ervandew/supertab'
 
 filetype plugin indent on     " required!
 "
@@ -56,19 +60,21 @@ endif
 set directory=~/.vim/swap
 
 
-set backspace=indent,eol,start  "allow backspacing over everything in insert mode
-set showcmd                     "show incomplete cmds down the bottom
-set showmode                    "show current mode down the bottom
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set showcmd                    " show incomplete cmds down the bottom
+set showmode                   " show current mode down the bottom
 
-set incsearch                   "find the next search as we type the search
-set hlsearch                    "highlight searchs
-set ignorecase                  "case-insensitive search
+set incsearch                  " find the next search as we type the search
+set hlsearch                   " highlight searchs
+set ignorecase                 " case insensitive search
+set smartcase                  " case sensitive if a pattern contains an uppercase letter
 
 set smartindent
 set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set laststatus=2
 set number
 set ruler
 set terse
@@ -93,16 +99,17 @@ let mapleader=","
 vmap <leader>a :Align >= = , :<cr>
 map <leader>a :Align => = , :<cr>
 
-" key maps
 nnoremap <f1> :NERDTreeToggle<cr>
 nnoremap <f2> :TagbarToggle<cr>
 
 " Shifting blocks visually
 nnoremap <Tab> >>_
 nnoremap <S-Tab> <<_
-inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+
+imap <C-J> <Plug>snipMateNextOrTrigger
+smap <C-J> <Plug>snipMateNextOrTrigger
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
