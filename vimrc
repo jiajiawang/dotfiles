@@ -8,7 +8,6 @@ filetype off                   " required!
 set rtp+=~/.vim/vundle.git/
 call vundle#rc()
 
-
 " let Vundle manage Vundle
 " required! 
 Bundle 'gmarik/vundle'
@@ -16,21 +15,21 @@ Bundle 'gmarik/vundle'
 " My Bundles here:
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "honza/vim-snippets"
-Bundle "garbas/vim-snipmate"
+Bundle 'SirVer/ultisnips'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
-Bundle 'wincent/Command-T'
+Bundle 'kien/ctrlp.vim'
 Bundle 'majutsushi/tagbar'
 Bundle 'skammer/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
 Bundle 'ervandew/supertab'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'altercation/vim-colors-solarized'
 
 filetype plugin indent on     " required!
 "
@@ -43,8 +42,16 @@ filetype plugin indent on     " required!
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
 
+" Turn on syntax highlighting
+syn on
 " color scheme
-colorscheme slate
+set background=dark
+if has("gui_running")
+    set transparency=5
+    colorscheme solarized
+else
+    colorscheme slate
+endif
 
 " Save backups to a less annoying place
 if isdirectory($HOME . '/.vim/backup') == 0
@@ -80,9 +87,6 @@ set ruler
 set terse
 set scrolloff=5
 
-" Turn on syntax highlighting
-syn on
-
 " always show tabs in gvim, but not vim
 " and show tab number in tab label
 set showtabline=2
@@ -91,25 +95,28 @@ au VimEnter * set guitablabel=%N)\ %M%t
 " autosave everything when losing focus, ignore warnings from untitled buffers
 au FocusLost * silent! wa
 
-let g:CommandTMaxHeight=20
+" plugins' config
+let g:ctrlp_clear_cache_on_exit = 0
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
 
 " mapping
 let mapleader=","
 
-vmap <leader>a :Align >= = , :<cr>
-map <leader>a :Align => = , :<cr>
+" quick align
+vmap <leader>a= :Align =<cr>
+vmap <leader>a: :Align :<cr>
+vmap <leader>a> :Align =><cr>
+map <leader>a= :Align =<cr>
+map <leader>a: :Align :<cr>
+map <leader>a> :Align =><cr>
 
 nnoremap <f1> :NERDTreeToggle<cr>
 nnoremap <f2> :TagbarToggle<cr>
 
 " Shifting blocks visually
-nnoremap <Tab> >>_
-nnoremap <S-Tab> <<_
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-
-imap <C-J> <Plug>snipMateNextOrTrigger
-smap <C-J> <Plug>snipMateNextOrTrigger
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
