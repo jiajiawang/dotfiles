@@ -29,6 +29,7 @@ Bundle 'Align'
 Bundle 'ervandew/supertab'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'mattn/zencoding-vim'
 
 filetype plugin indent on     " required!
 "
@@ -92,6 +93,8 @@ set ruler
 set terse
 set scrolloff=5
 
+set complete-=i
+
 " always show tabs in gvim, but not vim
 " and show tab number in tab label
 set showtabline=2
@@ -119,6 +122,21 @@ nnoremap <f2> :TagbarToggle<cr>
 " Shifting blocks visually
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+
+" CTRL-X are Cut
+vnoremap <C-X> "+x
+
+" CTRL-C are Copy
+vnoremap <C-C> "+y
+
+" CTRL-V are Paste
+map <C-V> "+gP
+cmap <C-V> <C-R>+
+
+" Use CTRL-S for saving, also in Insert mode
+noremap <C-S>		:update<CR>
+vnoremap <C-S>		<C-C>:update<CR>
+inoremap <C-S>		<C-O>:update<CR>
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
