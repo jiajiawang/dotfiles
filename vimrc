@@ -17,7 +17,6 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'SirVer/ultisnips'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
@@ -47,24 +46,30 @@ syn on
 " color scheme
 set background=dark
 if has("gui_running")
-    set transparency=5
-    colorscheme solarized
+    if has("gui_macvim")
+        set transparency=5
+    endif
+    colorscheme Tomorrow-Night-Eighties
 else
     colorscheme slate
 endif
+" font
+if (has("win32") || has("win64"))
+    set guifont=Consolas:h11
+endif
 
 " Save backups to a less annoying place
-if isdirectory($HOME . '/.vim/backup') == 0
-  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+if isdirectory($HOME . '/.vimbackup') == 0
+  :silent !mkdir -p ~/.vimbackup >/dev/null 2>&1
 endif
-set backupdir=~/.vim/backup
+set backupdir=~/.vimbackup
 set backup
 
 " Save swaps to a less annoying place
-if isdirectory($HOME . '/.vim/swap') == 0
-  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+if isdirectory($HOME . '/.vimswap') == 0
+  :silent !mkdir -p ~/.vimswap >/dev/null 2>&1
 endif
-set directory=~/.vim/swap
+set directory=~/.vimswap
 
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -99,17 +104,14 @@ au FocusLost * silent! wa
 let g:ctrlp_clear_cache_on_exit = 0
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
 
 " mapping
 let mapleader=","
 
 " quick align
-vmap <leader>a= :Align =<cr>
-vmap <leader>a: :Align :<cr>
-vmap <leader>a> :Align =><cr>
-map <leader>a= :Align =<cr>
-map <leader>a: :Align :<cr>
-map <leader>a> :Align =><cr>
+map <leader><leader>a :Align = , : => -><cr>
 
 nnoremap <f1> :NERDTreeToggle<cr>
 nnoremap <f2> :TagbarToggle<cr>
