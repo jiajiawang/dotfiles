@@ -59,18 +59,27 @@ if (has("win32") || has("win64"))
     set guifont=Consolas:h11
 endif
 
+function! MakeDir(dir)
+	if exists('*mkdir') && !isdirectory(a:dir)
+		silent! call mkdir(a:dir, 'p')
+    end
+	return a:dir
+endfunction
+
 " Save backups to a less annoying place
-if isdirectory($HOME . '/.vimbackup') == 0
-  :silent !mkdir -p ~/.vimbackup >/dev/null 2>&1
+if isdirectory(MakeDir($HOME . '/.vimbackup'))
+    set backupdir=~/.vimbackup
+else
+    echom "Backup directory setup failed."
 endif
-set backupdir=~/.vimbackup
 set backup
 
 " Save swaps to a less annoying place
-if isdirectory($HOME . '/.vimswap') == 0
-  :silent !mkdir -p ~/.vimswap >/dev/null 2>&1
+if isdirectory(MakeDir($HOME . '/.vimswap'))
+    set directory=~/.vimswap
+else
+    echom "Swap directory setup failed."
 endif
-set directory=~/.vimswap
 
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -94,14 +103,19 @@ set terse
 set scrolloff=5
 
 set complete-=i
+set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
+set selection=exclusive
 
 " always show tabs in gvim, but not vim
-" and show tab number in tab label
 set showtabline=2
-au VimEnter * set guitablabel=%N)\ %M%t
 
-" autosave everything when losing focus, ignore warnings from untitled buffers
-au FocusLost * silent! wa
+augroup startgroup
+    " and show tab number in tab label
+    au VimEnter * set guitablabel=%N)\ %M%t
+
+    " autosave everything when losing focus, ignore warnings from untitled buffers
+    au FocusLost * silent! wa
+augroup END
 
 " plugins' config
 let g:ctrlp_clear_cache_on_exit = 0
@@ -137,6 +151,26 @@ cmap <C-V> <C-R>+
 noremap <C-S>		:update<CR>
 vnoremap <C-S>		<C-C>:update<CR>
 inoremap <C-S>		<C-O>:update<CR>
+
+" Use Space to select word
+nnoremap <space> viw
+
+set guioptions-=m
+" Cursor movement in Insert mode
+inoremap <A-h> <Left>
+inoremap <A-l> <Right>
+inoremap <A-j> <Down>
+inoremap <A-k> <Up>
+" Quickly quit Insert mode
+inoremap <A-i> <Esc>
+
+" Quick split window navigation
+nnoremap <A-h> <C-w>h
+nnoremap <A-l> <C-w>l
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-q> :q<cr>
+
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
