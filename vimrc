@@ -111,24 +111,19 @@ set selection=exclusive
 set showtabline=2
 
 " Format status line
-set statusline=%7*\[%n]                                    " buffernr
-set statusline+=%1*\ %<%f\                                 " File
-if exists('g:loaded_fugitive')
-    set statusline+=%{fugitive#statusline()}\              " Fugitive status
-endif
-set statusline+=%3*\ %y\                                   " FileType
-set statusline+=%4*\ %{''.(&fenc!=''?&fenc:&enc).''}       " Encoding
-set statusline+=%4*\ %{(&bomb?\",BOM\":\"\")}\             " Encoding2
-set statusline+=%5*\ %{&ff}\                               " FileFormat (dos/unix..)
-if exists('g:syntastic_check_on_open')
-    set statusline+=%6*%{SyntasticStatuslineFlag()}        " Syntastic warning message
-endif
-if exists('g:tagbar_autofocus')
-    set statusline+=%2*%{tagbar#currenttag('\ <%s>\ ','')} " Current tag
-endif
-set statusline+=%8*\ %m%r%w\                               " Modified? Readonly?
-set statusline+=%=\ %-14.([%03b]\ [0x%04B]%)\              " Character under curdor
-set statusline+=%0*%5l,%-3c\ ln:%-5L                       " Row,col ln:TotalLineNumber
+set statusline=%7*\[%n]                              " buffernr
+set statusline+=%1*\ %<%f\                           " File
+set statusline+=%{fugitive#statusline()}\            " Fugitive status
+set statusline+=%3*\ %y\                             " FileType
+set statusline+=%4*\ %{''.(&fenc!=''?&fenc:&enc).''} " Encoding
+set statusline+=%4*\ %{(&bomb?',BOM':'')}\           " Encoding2
+set statusline+=%5*\ %{&ff}\                         " FileFormat (dos/unix..)
+set statusline+=%6*%{SyntasticStatuslineFlag()}      " Syntastic warning message
+set statusline+=%8*\ %m%r%w\                         " Modified? Readonly?
+set statusline+=%=                                   " Start right align
+set statusline+=%{tagbar#currenttag('\ <%s>\ ','')}  " Current tag
+set statusline+=%0*%5l,%-3c\ ln:%-5L                 " Row,col ln:TotalLineNumber
+set statusline+=%14.([%03b]\ [0x%04B]%)\             " Character under curdor
 
 " status line colors
 hi User1 guifg=#ffdad8  guibg=#880c0e
@@ -155,6 +150,7 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
 
 " mapping
 let mapleader=","
