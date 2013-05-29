@@ -113,7 +113,7 @@ set showtabline=2
 " Format status line
 set statusline=%7*\[%n]                              " buffernr
 set statusline+=%1*\ %<%f\                           " File
-set statusline+=%{fugitive#statusline()}\            " Fugitive status
+set statusline+=%2*%{fugitive#statusline()}\            " Fugitive status
 set statusline+=%3*\ %y\                             " FileType
 set statusline+=%4*\ %{''.(&fenc!=''?&fenc:&enc).''} " Encoding
 set statusline+=%4*\ %{(&bomb?',BOM':'')}\           " Encoding2
@@ -126,13 +126,13 @@ set statusline+=%0*%5l,%-3c\ ln:%-5L                 " Row,col ln:TotalLineNumbe
 set statusline+=%14.([%03b]\ [0x%04B]%)\             " Character under curdor
 
 " status line colors
-hi User1 guifg=#ffdad8  guibg=#880c0e
-hi User2 guifg=#000000  guibg=#F4905C
+hi User1 guifg=#000000  guibg=#f2777a
+hi User2 guifg=#000000  guibg=#f2777a
 hi User3 guifg=#292b00  guibg=#f4f597
 hi User4 guifg=#112605  guibg=#aefe7B
 hi User5 guifg=#051d00  guibg=#7dcc7d
 hi User6 guifg=#ffffff  guibg=#810085 gui=bold
-hi User7 guifg=#ffffff  guibg=#880c0e gui=bold
+hi User7 guifg=#000000  guibg=#f2777a gui=bold
 hi User8 guifg=#ffffff  guibg=#5b7fbb
 hi User0 guifg=#ffffff  guibg=#094afe
 
@@ -195,7 +195,7 @@ inoremap <M-j> <Down>
 inoremap <M-k> <Up>
 " Quickly quit Insert mode
 inoremap <A-i> <Esc>
-inoremap <M-i> <Esc>
+inoremap <D-i> <Esc>
 
 " Quick split window navigation
 nnoremap <A-h> <C-w>h
