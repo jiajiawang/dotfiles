@@ -50,8 +50,10 @@ if has("gui_running")
     if has("gui_macvim")
         set transparency=5
         set macmeta " enable macmeta for meta key mappings <M-?>
+        colorscheme Tomorrow-Night-Eighties
+    else
+        colorscheme jellybeans
     endif
-    colorscheme Tomorrow-Night-Eighties
 else
     colorscheme slate
 endif
@@ -151,6 +153,7 @@ let g:indent_guides_start_level = 2
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
+let g:SuperTabDefaultCompletionType="context"
 
 " mapping
 let mapleader=","
@@ -165,23 +168,24 @@ nnoremap <f2> :TagbarToggle<cr>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-" CTRL-X are Cut
-vnoremap <C-X> "+x
+" Alt-X are Cut
+vnoremap <A-x> "+x
 
-" CTRL-C are Copy
-vnoremap <C-C> "+y
+" Alt-C are Copy
+vnoremap <A-v> "+y
 
-" CTRL-V are Paste
-map <C-V> "+gP
-cmap <C-V> <C-R>+
+" Alt-V are Paste
+map <A-v> "+gP
+cmap <A-v> <C-R>+
 
-" Use CTRL-S for saving, also in Insert mode
-noremap <C-S>		:update<CR>
-vnoremap <C-S>		<C-C>:update<CR>
-inoremap <C-S>		<C-O>:update<CR>
+" Use Alt-S for saving, also in Insert mode
+noremap <A-s>		:update<CR>
+vnoremap <A-s>		<C-C>:update<CR>
+inoremap <A-s>		<C-O>:update<CR>
 
-" Use Space to select word
-nnoremap <space> viw
+" Use Space to scroll page
+nnoremap <Space> 15<C-E>
+nnoremap <S-Space> 15<C-Y>
 
 set guioptions-=m
 " Cursor movement in Insert mode
@@ -193,9 +197,13 @@ inoremap <M-h> <Left>
 inoremap <M-l> <Right>
 inoremap <M-j> <Down>
 inoremap <M-k> <Up>
-" Quickly quit Insert mode
+" Replace Esc with Alt-I (Command-I in Mac OS)
 inoremap <A-i> <Esc>
 inoremap <D-i> <Esc>
+vnoremap <A-i> <Esc>
+vnoremap <D-i> <Esc>
+cnoremap <A-i> <Esc>
+cnoremap <D-i> <Esc>
 
 " Quick split window navigation
 nnoremap <A-h> <C-w>h
@@ -223,4 +231,85 @@ vnoremap <silent> # :<C-U>
   \gvy?<C-R><C-R>=substitute(
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+
+" Get a list of absolute path of buffers
+function! GetBuffersAbsolutePathList()
+    let blist = []
+    let bffs = ""
+    let cwd = getcwd()
+    silent! execute "cd /"
+    silent! redir => bffs
+    silent! execute "ls"
+    redir END
+    silent! execute "cd " . cwd
+    for bff in split(bffs, '\v\n')
+        let bffpath = substitute(substitute(bff, '\v^[^"]*"', '/', ''), '\v".*$', '', '')
+        call add(blist, bffpath)
+    endfor
+    return blist
+endfun
+
+" Customize a '.' operator complete function
+" find parent->child patterns in all buffers
+" the supported formats includes:
+"       p.c, p[c], p['c'], p["c"], p{c}, p{'c'}, p{"c"}
+"       p->c, p->{c}, p->{"c"}, p->{'c'},  p->[c], p->["c"], p->['c']
+" example:
+"       suppose that 'person->{name}' is used,
+"       if you type 'p.n<Ctrl-X><Ctrl-U>' then 'person->{name}' will be included in complete list
+" For SuperTab user, please make sure that you have 'let g:SuperTabDefaultCompletionType="context"'
+function! CompleteDotOperator(findstart, base)
+    if a:findstart
+        return match(strpart(getline('.'), 0, col('.') - 1), '\v\w+.\w+$')
+    else
+        let parent = matchstr(a:base, '\v^\w+') . '\w*'
+        let child = matchstr(a:base, '\v\w+$') . '\w\+'
+        let patterns = []
+        " parent.child
+        call add(patterns, '"' . parent . '\.' . child . '"')
+        " parent->child
+        call add(patterns, '"' . parent . '->' . child . '"')
+        " parent{child} or parent->{child}
+        call add(patterns, '"' . parent . '\(->\)\?{' . child . '}"')
+        " parent{'child'} or parent->{'child'}
+        call add(patterns, '"' . parent . '\(->\)\?{''' . child . '''}"')
+        " parent{"child"} or parent->{"child"}
+        call add(patterns, '"' . parent . '\(->\)\?{\"' . child . '\"}"')
+        " parent[child] or parent->[child]
+        call add(patterns, '"' . parent . '\(->\)\?\[' . child . '\]"')
+        " parent['child'] or parent->['child']
+        call add(patterns, '"' . parent . '\(->\)\?\[''' . child . '''\]"')
+        " parent["child"] or parent->["child"]
+        call add(patterns, '"' . parent . '\(->\)\?\[\"' . child . '\"\]"')
+
+        " format grep command
+        let grepcommand = 'grep'
+        for pattern in patterns
+            let grepcommand .= ' -e ' . pattern
+        endfor
+        let filenames = join(GetBuffersAbsolutePathList(), ' ')
+        let grepcommand .= ' ' . filenames
+
+        " remember things will be affected
+        let gprg = &grepprg
+        let qflist = getqflist()
+
+        " run grep command and collect results
+        " it requires a grep command that supports -o option (match only)
+        set grepprg=grep\ -iho
+        silent execute grepcommand
+        let res = []
+        for i in getqflist()
+            call add(res, i.text)
+        endfor
+
+        " restore things affected
+        let &grepprg = gprg
+        call setqflist(qflist, 'r')
+
+        return res
+    endif
+endfun
+setlocal completefunc=CompleteDotOperator
 
