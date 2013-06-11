@@ -5,3 +5,7 @@ endsnippet
 snippet warnv "warn v=$v" !b
 warn "${1:variable}=\$$1\n";
 endsnippet
+
+snippet sth "dbh prepare" !b
+my \$${1:sth} = $self->dbh('${2:rev_master}')->prepare("${3:$sql}");
+endsnippet
