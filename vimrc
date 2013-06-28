@@ -144,6 +144,12 @@ augroup startgroup
 
     " autosave everything when losing focus, ignore warnings from untitled buffers
     au FocusLost * silent! wa
+
+    " auto-update log file without confirmation and keep cursor at the bottom after update
+    " convinient for monitoring log files
+    au BufNewFile,BufRead *.log setlocal autoread | normal G
+    au FileChangedShellPost *.log normal G
+
 augroup END
 
 " plugins' config
@@ -233,62 +239,49 @@ vnoremap <silent> # :<C-U>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 
-" Get a list of absolute path of buffers
-function! GetBuffersAbsolutePathList()
+" Get a list of all buffers path
+function! GetBuffersPathList()
     let blist = []
     let bffs = ""
-    let cwd = getcwd()
-    silent! execute "cd /"
     silent! redir => bffs
     silent! execute "ls"
     redir END
-    silent! execute "cd " . cwd
     for bff in split(bffs, '\v\n')
-        let bffpath = substitute(substitute(bff, '\v^[^"]*"', '/', ''), '\v".*$', '', '')
+        let bffpath = substitute(substitute(bff, '\v^[^"]*"', '', ''), '\v".*$', '', '')
         call add(blist, bffpath)
     endfor
     return blist
+    No such file or directory
 endfun
 
 " Customize a '.' operator complete function
-" find parent->child patterns in all buffers
+" find parent->child->... patterns in all buffers
 " the supported formats includes:
 "       p.c, p[c], p['c'], p["c"], p{c}, p{'c'}, p{"c"}
 "       p->c, p->{c}, p->{"c"}, p->{'c'},  p->[c], p->["c"], p->['c']
 " example:
-"       suppose that 'person->{name}' is used,
-"       if you type 'p.n<Ctrl-X><Ctrl-U>' then 'person->{name}' will be included in complete list
+"       p.j.t will match person.job.title, person->job->title, person{job}{title}
 " For SuperTab user, please make sure that you have 'let g:SuperTabDefaultCompletionType="context"'
 function! CompleteDotOperator(findstart, base)
     if a:findstart
-        return match(strpart(getline('.'), 0, col('.') - 1), '\v\w+.\w+$')
+        return match(strpart(getline('.'), 0, col('.') - 1), '\v(\w+.)+\w+$')
     else
-        let parent = matchstr(a:base, '\v^\w+') . '\w*'
-        let child = matchstr(a:base, '\v\w+$') . '\w\+'
         let patterns = []
-        " parent.child
-        call add(patterns, '"' . parent . '\.' . child . '"')
-        " parent->child
-        call add(patterns, '"' . parent . '->' . child . '"')
-        " parent{child} or parent->{child}
-        call add(patterns, '"' . parent . '\(->\)\?{' . child . '}"')
-        " parent{'child'} or parent->{'child'}
-        call add(patterns, '"' . parent . '\(->\)\?{''' . child . '''}"')
-        " parent{"child"} or parent->{"child"}
-        call add(patterns, '"' . parent . '\(->\)\?{\"' . child . '\"}"')
-        " parent[child] or parent->[child]
-        call add(patterns, '"' . parent . '\(->\)\?\[' . child . '\]"')
-        " parent['child'] or parent->['child']
-        call add(patterns, '"' . parent . '\(->\)\?\[''' . child . '''\]"')
-        " parent["child"] or parent->["child"]
-        call add(patterns, '"' . parent . '\(->\)\?\[\"' . child . '\"\]"')
+        let first = matchstr(a:base, '\v^\w+') . '\w*'
+        let rest = matchstr(a:base, '\v\..*$')
+
+        " parent.child, parent->child
+        call add(patterns, '"' . first . substitute(rest, '\v\.(\w+)', '(\\.\\|->)\1\\w*', 'g') . '"')
+        " parent{child}, parent{'child'}, parent{"child"}, parent[child], parent['child'], parent["child"]
+        " parent->{child}, parent->{'child'}, parent->{"child"}, parent->[child], parent->['child'], parent->["child"]
+        call add(patterns, '"' . first . substitute(rest, '\v\.(\w+)', '(->)?(\\{\\|\\[)(\\"\\|' . "'" . ')?\1\\w*(\\"\\|' . "'" . ')?(\\}\\|\\])', 'g') . '"')
 
         " format grep command
         let grepcommand = 'grep'
         for pattern in patterns
             let grepcommand .= ' -e ' . pattern
         endfor
-        let filenames = join(GetBuffersAbsolutePathList(), ' ')
+        let filenames = join(GetBuffersPathList(), ' ')
         let grepcommand .= ' ' . filenames
 
         " remember things will be affected
@@ -297,11 +290,13 @@ function! CompleteDotOperator(findstart, base)
 
         " run grep command and collect results
         " it requires a grep command that supports -o option (match only)
-        set grepprg=grep\ -iho
-        silent execute grepcommand
+        set grepprg=grep\ -Eiho "Extended regular expression, ignore case, no filenames, match only
+        silent! execute grepcommand
         let res = []
+        " save my time in perl
+        let prefix = &filetype ==? 'perl' ? '$' : ''
         for i in getqflist()
-            call add(res, i.text)
+            call add(res, prefix . i.text)
         endfor
 
         " restore things affected
@@ -311,5 +306,5 @@ function! CompleteDotOperator(findstart, base)
         return res
     endif
 endfun
-setlocal completefunc=CompleteDotOperator
+set completefunc=CompleteDotOperator
 
