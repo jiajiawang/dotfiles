@@ -26,6 +26,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'skammer/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
+Bundle 'fholgado/minibufexpl.vim'
 Bundle 'ervandew/supertab'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'altercation/vim-colors-solarized'
@@ -95,8 +96,6 @@ set ignorecase                 " case insensitive search
 set smartcase                  " case sensitive if a pattern contains an uppercase letter
 
 set smartindent
-set tabstop=4
-set shiftwidth=4
 set expandtab
 
 set laststatus=2
@@ -137,8 +136,23 @@ hi User6 guifg=#ffffff  guibg=#810085 gui=bold
 hi User7 guifg=#000000  guibg=#f2777a gui=bold
 hi User8 guifg=#ffffff  guibg=#5b7fbb
 hi User0 guifg=#ffffff  guibg=#094afe
+hi MBENormal guifg=#202020 guibg=#aaaaaa
+hi MBEChanged guifg=#202020 guibg=#aaaaaa
+hi MBEVisibleNormal guifg=#202020 guibg=#aaaaaa
+hi MBEVisibleChanged guifg=#202020 guibg=#aaaaaa
+hi MBEVisibleActiveNormal guifg=#080808  guibg=#eeeeee gui=bold
+hi MBEVisibleActiveChanged guifg=#080808  guibg=#eeeeee gui=bold
 
 augroup startgroup
+    " 
+    autocmd FileType * set tabstop=4|set shiftwidth=4
+    autocmd FileType ruby set tabstop=2|set shiftwidth=2
+
+
+    "
+    au BufRead *.tmpl set filetype=html
+    au BufRead *.html.erb setfiletype eruby.html
+
     " and show tab number in tab label
     au VimEnter * set guitablabel=%N)\ %M%t
 
@@ -147,8 +161,8 @@ augroup startgroup
 
     " auto-update log file without confirmation and keep cursor at the bottom after update
     " convinient for monitoring log files
-    au BufNewFile,BufRead *.log setlocal autoread | normal G
-    au FileChangedShellPost *.log normal G
+    au BufRead *.log setlocal autoread | normal G
+    "au FileChangedShellPost *.log normal G
 
 augroup END
 
@@ -160,6 +174,7 @@ let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
 let g:SuperTabDefaultCompletionType="context"
+let g:miniBufExplMinSize=2
 
 " mapping
 let mapleader=","
@@ -169,6 +184,13 @@ map <leader><leader>a :Align = , : => -><cr>
 
 nnoremap <f1> :NERDTreeToggle<cr>
 nnoremap <f2> :TagbarToggle<cr>
+nnoremap <f3> :MBEToggle<cr>
+nnoremap <leader>bf :MBEbf<cr>
+nnoremap <leader>bb :MBEbb<cr>
+nnoremap <leader>bp :MBEbp<cr>
+nnoremap <leader>bn :MBEbn<cr>
+nnoremap <leader>mb :MBEFocus<cr>
+
 
 " Shifting blocks visually
 vnoremap <Tab> >gv
@@ -264,7 +286,7 @@ endfun
 " For SuperTab user, please make sure that you have 'let g:SuperTabDefaultCompletionType="context"'
 function! CompleteDotOperator(findstart, base)
     if a:findstart
-        return match(strpart(getline('.'), 0, col('.') - 1), '\v(\w+.)+\w+$')
+        return match(strpart(getline('.'), 0, col('.') - 1), '\v(\w+\.)+\w+$')
     else
         let patterns = []
         let first = matchstr(a:base, '\v^\w+') . '\w*'
@@ -294,7 +316,7 @@ function! CompleteDotOperator(findstart, base)
         silent! execute grepcommand
         let res = []
         " save my time in perl
-        let prefix = &filetype ==? 'perl' ? '$' : ''
+        let prefix = &filetype ==? 'perl' ? '' : ''
         for i in getqflist()
             call add(res, prefix . i.text)
         endfor
