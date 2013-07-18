@@ -22,15 +22,19 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'kien/ctrlp.vim'
+" requirement: exuberant-ctags
+" if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
+" article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
 Bundle 'majutsushi/tagbar'
 Bundle 'skammer/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
 Bundle 'fholgado/minibufexpl.vim'
-Bundle 'ervandew/supertab'
+"Bundle 'ervandew/supertab'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'mattn/zencoding-vim'
+Bundle 'Shougo/neocomplcache.vim'
 
 filetype plugin indent on     " required!
 "
@@ -96,6 +100,8 @@ set ignorecase                 " case insensitive search
 set smartcase                  " case sensitive if a pattern contains an uppercase letter
 
 set smartindent
+set tabstop=4
+set shiftwidth=4
 set expandtab
 
 set laststatus=2
@@ -145,9 +151,14 @@ hi MBEVisibleActiveChanged guifg=#080808  guibg=#eeeeee gui=bold
 
 augroup startgroup
     " 
-    autocmd FileType * set tabstop=4|set shiftwidth=4
-    autocmd FileType ruby set tabstop=2|set shiftwidth=2
+    autocmd FileType ruby setlocal tabstop=2|set shiftwidth=2
 
+    "omnifunc
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
     "
     au BufRead *.tmpl set filetype=html
@@ -170,10 +181,11 @@ augroup END
 let g:ctrlp_clear_cache_on_exit = 0
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
+let g:UltiSnipsExpandTrigger="<C-j>"
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
-let g:SuperTabDefaultCompletionType="context"
+"let g:SuperTabDefaultCompletionType="context"
 let g:miniBufExplMinSize=2
 
 " mapping
@@ -203,7 +215,7 @@ vnoremap <A-x> "+x
 vnoremap <A-v> "+y
 
 " Alt-V are Paste
-map <A-v> "+gP
+map <A-v> "+gp
 cmap <A-v> <C-R>+
 
 " Use Alt-S for saving, also in Insert mode
@@ -260,73 +272,77 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
-" Get a list of all buffers path
-function! GetBuffersPathList()
-    let blist = []
-    let bffs = ""
-    silent! redir => bffs
-    silent! execute "ls"
-    redir END
-    for bff in split(bffs, '\v\n')
-        let bffpath = substitute(substitute(bff, '\v^[^"]*"', '', ''), '\v".*$', '', '')
-        call add(blist, bffpath)
-    endfor
-    return blist
-    No such file or directory
-endfun
+" Enable heavy features.
+" Use camel case completion.
+"let g:neocomplcache_enable_camel_case_completion = 1
+" Use underbar completion.
+"let g:neocomplcache_enable_underbar_completion = 1
 
-" Customize a '.' operator complete function
-" find parent->child->... patterns in all buffers
-" the supported formats includes:
-"       p.c, p[c], p['c'], p["c"], p{c}, p{'c'}, p{"c"}
-"       p->c, p->{c}, p->{"c"}, p->{'c'},  p->[c], p->["c"], p->['c']
-" example:
-"       p.j.t will match person.job.title, person->job->title, person{job}{title}
-" For SuperTab user, please make sure that you have 'let g:SuperTabDefaultCompletionType="context"'
-function! CompleteDotOperator(findstart, base)
-    if a:findstart
-        return match(strpart(getline('.'), 0, col('.') - 1), '\v(\w+\.)+\w+$')
-    else
-        let patterns = []
-        let first = matchstr(a:base, '\v^\w+') . '\w*'
-        let rest = matchstr(a:base, '\v\..*$')
+" Define dictionary.
+"let g:neocomplcache_dictionary_filetype_lists = { 'default' : '' }
 
-        " parent.child, parent->child
-        call add(patterns, '"' . first . substitute(rest, '\v\.(\w+)', '(\\.\\|->)\1\\w*', 'g') . '"')
-        " parent{child}, parent{'child'}, parent{"child"}, parent[child], parent['child'], parent["child"]
-        " parent->{child}, parent->{'child'}, parent->{"child"}, parent->[child], parent->['child'], parent->["child"]
-        call add(patterns, '"' . first . substitute(rest, '\v\.(\w+)', '(->)?(\\{\\|\\[)(\\"\\|' . "'" . ')?\1\\w*(\\"\\|' . "'" . ')?(\\}\\|\\])', 'g') . '"')
+" Define keyword.
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-        " format grep command
-        let grepcommand = 'grep'
-        for pattern in patterns
-            let grepcommand .= ' -e ' . pattern
-        endfor
-        let filenames = join(GetBuffersPathList(), ' ')
-        let grepcommand .= ' ' . filenames
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
-        " remember things will be affected
-        let gprg = &grepprg
-        let qflist = getqflist()
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplcache#smart_close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
 
-        " run grep command and collect results
-        " it requires a grep command that supports -o option (match only)
-        set grepprg=grep\ -Eiho "Extended regular expression, ignore case, no filenames, match only
-        silent! execute grepcommand
-        let res = []
-        " save my time in perl
-        let prefix = &filetype ==? 'perl' ? '' : ''
-        for i in getqflist()
-            call add(res, prefix . i.text)
-        endfor
+" For cursor moving in insert mode(Not recommended)
+"inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+"inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+"inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+"inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+" Or set this.
+"let g:neocomplcache_enable_cursor_hold_i = 1
+" Or set this.
+"let g:neocomplcache_enable_insert_char_pre = 1
 
-        " restore things affected
-        let &grepprg = gprg
-        call setqflist(qflist, 'r')
+" AutoComplPop like behavior.
+"let g:neocomplcache_enable_auto_select = 1
 
-        return res
-    endif
-endfun
-set completefunc=CompleteDotOperator
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplcache_enable_auto_select = 1
+"let g:neocomplcache_disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
