@@ -191,6 +191,7 @@ let g:miniBufExplMinSize=2
 " mapping
 let mapleader=","
 
+
 " quick align
 map <leader><leader>a :Align = , : => -><cr>
 
