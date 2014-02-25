@@ -33,7 +33,8 @@ Bundle 'kien/ctrlp.vim'
 " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
 Bundle 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
-Bundle 'skammer/vim-css-color'
+"Bundle 'skammer/vim-css-color'
+Bundle 'ap/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
 "Bundle 'fholgado/minibufexpl.vim'
@@ -49,7 +50,8 @@ Bundle 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'mattn/zencoding-vim'
+"Bundle 'mattn/zencoding-vim'
+Bundle 'mattn/emmet-vim'
 Bundle 'Shougo/neocomplcache.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'christoomey/vim-tmux-navigator'
@@ -58,6 +60,8 @@ Bundle 'bling/vim-airline'
   let g:airline_right_sep=' '
   let g:airline#extensions#tabline#enabled=1
   let g:airline#extensions#tabline#buffer_nr_show=1
+Bundle 'othree/javascript-libraries-syntax.vim'
+  let g:used_javascript_libs='jquery,angularjs'
 
 filetype plugin indent on     " required!
 "
@@ -73,42 +77,18 @@ filetype plugin indent on     " required!
 " Turn on syntax highlighting
 syn on
 " color scheme
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-colorscheme solarized
+set t_Co=256
+color kolor
 set background=dark
-if has("gui_running")
-  if has("gui_macvim")
-      set transparency=5
-      colorscheme Tomorrow-Night-Eighties
-  else
-      colorscheme jellybeans
-  endif
-endif
+"let g:solarized_termcolors=256
+"let g:solarized_termtrans=1
+
 " font
 set guifont=Consolas:h11
 
-function! MakeDir(dir)
-  if exists('*mkdir') && !isdirectory(a:dir)
-      silent! call mkdir(a:dir, 'p')
-  end
-  return a:dir
-endfunction
-
-" Save backups to a less annoying place
-if isdirectory(MakeDir($HOME . '/.vimbackup'))
-  set backupdir=~/.vimbackup
-else
-  echom "Backup directory setup failed."
-endif
-set backup
-
-" Save swaps to a less annoying place
-if isdirectory(MakeDir($HOME . '/.vimswap'))
-  set directory=~/.vimswap
-else
-  echom "Swap directory setup failed."
-endif
+" no backup and swap file
+set nobackup
+set noswapfile
 
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -174,11 +154,15 @@ augroup END
 " mapping
 let mapleader=","
 
+" Fast saving
+nmap <leader>w :w<cr>
 
 " quick align
 map <leader><leader>a :Align = , : => -><cr>
 
-
+" Treat long lines as break lines
+map j gj
+map k gk
 
 " Shifting blocks visually
 vnoremap <Tab> >gv
