@@ -9,3 +9,7 @@ endsnippet
 snippet sth "dbh prepare" !b
 my \$${1:sth} = $self->dbh('${2:rev_master}')->prepare("${3:$sql}");
 endsnippet
+
+snippet . "->" i
+->$0
+endsnippet

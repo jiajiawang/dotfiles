@@ -13,15 +13,18 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " My Bundles here:
+Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-j>"
   let g:UltiSnipsEditSplit="vertical"
   let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
+Bundle 'honza/vim-snippets'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
@@ -33,26 +36,14 @@ Bundle 'kien/ctrlp.vim'
 " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
 Bundle 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
-"Bundle 'skammer/vim-css-color'
 Bundle 'ap/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
-"Bundle 'fholgado/minibufexpl.vim'
-  "let g:miniBufExplMinSize=2
-  "nnoremap <f3> :MBEToggle<cr>
-  "nnoremap <leader>bf :MBEbf<cr>
-  "nnoremap <leader>bb :MBEbb<cr>
-  "nnoremap <leader>bp :MBEbp<cr>
-  "nnoremap <leader>bn :MBEbn<cr>
-  "nnoremap <leader>mb :MBEFocus<cr>
-"Bundle 'ervandew/supertab'
 Bundle 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
 Bundle 'altercation/vim-colors-solarized'
-"Bundle 'mattn/zencoding-vim'
 Bundle 'mattn/emmet-vim'
-Bundle 'Shougo/neocomplcache.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'bling/vim-airline'
@@ -62,6 +53,15 @@ Bundle 'bling/vim-airline'
   let g:airline#extensions#tabline#buffer_nr_show=1
 Bundle 'othree/javascript-libraries-syntax.vim'
   let g:used_javascript_libs='jquery,angularjs'
+Bundle 'moll/vim-node'
+Bundle 'jelera/vim-javascript-syntax'
+Bundle 'myhere/vim-nodejs-complete'
+  let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
+" run npm install in 'bundle/tern_for_vim' after installed
+Bundle 'marijnh/tern_for_vim'
+Bundle 'guileen/vim-node-dict'
+Bundle 'pangloss/vim-javascript'
+Bundle 'vim-scripts/JavaScript-Indent'
 
 filetype plugin indent on     " required!
 "
@@ -78,8 +78,8 @@ filetype plugin indent on     " required!
 syn on
 " color scheme
 set t_Co=256
-color kolor
 set background=dark
+color kolor
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
 
@@ -128,6 +128,7 @@ augroup startgroup
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType javascript set dictionary+=$HOME/.vim/dict/node.dict
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -210,77 +211,3 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Enable heavy features.
-" Use camel case completion.
-"let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-"let g:neocomplcache_enable_underbar_completion = 1
-
-" Define dictionary.
-"let g:neocomplcache_dictionary_filetype_lists = { 'default' : '' }
-
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
-" Or set this.
-"let g:neocomplcache_enable_cursor_hold_i = 1
-" Or set this.
-"let g:neocomplcache_enable_insert_char_pre = 1
-
-" AutoComplPop like behavior.
-"let g:neocomplcache_enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
