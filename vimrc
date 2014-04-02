@@ -156,7 +156,7 @@ augroup END
 let mapleader=","
 
 " Fast saving
-nmap <leader>w :w<cr>
+nmap <leader>ww :w<cr>
 
 " quick align
 map <leader><leader>a :Align = , : => -><cr>
