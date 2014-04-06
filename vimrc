@@ -18,7 +18,6 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-j>"
   let g:UltiSnipsEditSplit="vertical"
@@ -31,11 +30,6 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'kien/ctrlp.vim'
   let g:ctrlp_clear_cache_on_exit = 0
-" requirement: exuberant-ctags
-" if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
-" article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
-Bundle 'majutsushi/tagbar'
-  nnoremap <f2> :TagbarToggle<cr>
 Bundle 'ap/vim-css-color'
 Bundle 'matchit.zip'
 Bundle 'Align'
@@ -57,11 +51,20 @@ Bundle 'moll/vim-node'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'myhere/vim-nodejs-complete'
   let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
-" run npm install in 'bundle/tern_for_vim' after installed
-Bundle 'marijnh/tern_for_vim'
 Bundle 'guileen/vim-node-dict'
 Bundle 'pangloss/vim-javascript'
-Bundle 'vim-scripts/JavaScript-Indent'
+"Bundle 'vim-scripts/JavaScript-Indent'
+
+"Bundles requires additional sources or installation steps
+Bundle 'Valloric/YouCompleteMe'
+  " sh bundle/youcompleteme/install.sh
+Bundle 'majutsushi/tagbar'
+  nnoremap <f2> :TagbarToggle<cr>
+  " requirement: exuberant-ctags
+  " if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
+  " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
+Bundle 'marijnh/tern_for_vim'
+  " run npm install in 'bundle/tern_for_vim'
 
 filetype plugin indent on     " required!
 "
