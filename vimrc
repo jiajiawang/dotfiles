@@ -13,13 +13,15 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " My Bundles here:
-Bundle 'Raimondi/delimitMate'
+"Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-rails'
+Bundle 'vim-ruby/vim-ruby'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'SirVer/ultisnips'
-  let g:UltiSnipsExpandTrigger="<C-j>"
+  let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
   let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
@@ -52,6 +54,7 @@ Bundle 'jelera/vim-javascript-syntax'
 Bundle 'myhere/vim-nodejs-complete'
   let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
 Bundle 'guileen/vim-node-dict'
+  au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node-dict/dict/node.dict
 Bundle 'pangloss/vim-javascript'
 "Bundle 'vim-scripts/JavaScript-Indent'
 
@@ -116,7 +119,7 @@ set ruler
 set terse
 set scrolloff=5
 
-set complete-=i
+set complete+=k
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 set selection=exclusive
 
@@ -125,13 +128,12 @@ set selection=exclusive
 
 augroup startgroup
   "
-  autocmd FileType perl,html,javascript,css setlocal shiftwidth=4
+  autocmd FileType perl,html,javascript,css,xml setlocal shiftwidth=4
 
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType javascript set dictionary+=$HOME/.vim/dict/node.dict
+  "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -152,11 +154,13 @@ augroup startgroup
 
 augroup END
 
-" plugins' config
-"let g:SuperTabDefaultCompletionType="context"
+" Eclim
+let g:EclimCompletionMethod = 'omnifunc'
 
 " mapping
 let mapleader=","
+
+set pastetoggle=<F3>
 
 " Fast saving
 nmap <leader>ww :w<cr>
@@ -171,21 +175,6 @@ map k gk
 " Shifting blocks visually
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-
-" Alt-X are Cut
-vnoremap <A-x> "+x
-
-" Alt-C are Copy
-vnoremap <A-v> "+y
-
-" Alt-V are Paste
-map <A-v> "+gp
-cmap <A-v> <C-R>+
-
-" Use Ctrl-s for saving, also in Insert mode
-noremap <C-s>		:update<CR>
-vnoremap <C-s>		<C-C>:update<CR>
-inoremap <C-s>		<C-O>:update<CR>
 
 " Use Space to scroll page
 nnoremap <Space> 15<C-E>
