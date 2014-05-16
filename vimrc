@@ -60,7 +60,7 @@ Bundle 'pangloss/vim-javascript'
 
 "Bundles requires additional sources or installation steps
 Bundle 'Valloric/YouCompleteMe'
-  " sh bundle/youcompleteme/install.sh
+  " sh bundle/youcompleteme/install.sh --clang-completer
 Bundle 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
@@ -134,6 +134,7 @@ augroup startgroup
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
   "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 

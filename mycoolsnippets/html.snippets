@@ -1,0 +1,19 @@
+snippet tif "tmpl_if" w
+<TMPL_IF ${1:true}>$2</TMPL_IF>$0
+endsnippet
+
+snippet tvar "tmpl_var" w
+<TMPL_VAR NAME="$1">$0
+endsnippet
+
+snippet tife "tmpl_if_else" w
+<TMPL_IF $1>$2<TMPL_ELSE>$3</TMPL_IF>$0
+endsnippet
+
+snippet tloop "tmpl_loop"
+<TMPL_LOOP ${1:loop_name}>$2</TMPL_LOOP>$0
+endsnippet
+
+snippet tunless "templ_unless" w
+<TMPL_UNLESS $1>$2</TMPL_UNLESS>$0
+endsnippet
