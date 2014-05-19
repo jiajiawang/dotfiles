@@ -5,80 +5,82 @@ set nocompatible               " be iMproved
 " Vundle Config
 filetype off                   " required!
 
-set rtp+=~/.vim/vundle.git/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
+" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 " let Vundle manage Vundle
 " required!
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
-" My Bundles here:
-"Bundle 'Raimondi/delimitMate'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-rails'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'SirVer/ultisnips'
+" My Plugins here:
+Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rails'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
   let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
-Bundle 'honza/vim-snippets'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
+Plugin 'honza/vim-snippets'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
-Bundle 'scrooloose/syntastic'
-Bundle 'kien/ctrlp.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'kien/ctrlp.vim'
   let g:ctrlp_clear_cache_on_exit = 0
-Bundle 'ap/vim-css-color'
-Bundle 'matchit.zip'
-Bundle 'Align'
-Bundle 'nathanaelkane/vim-indent-guides'
+Plugin 'ap/vim-css-color'
+Plugin 'matchit.zip'
+Plugin 'Align'
+Plugin 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'mattn/emmet-vim'
-Bundle 'mileszs/ack.vim'
-Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'bling/vim-airline'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'mattn/emmet-vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'bling/vim-airline'
   let g:airline_left_sep=' '
   let g:airline_right_sep=' '
   let g:airline#extensions#tabline#enabled=1
   let g:airline#extensions#tabline#buffer_nr_show=1
-Bundle 'othree/javascript-libraries-syntax.vim'
+Plugin 'othree/javascript-libraries-syntax.vim'
   let g:used_javascript_libs='jquery,angularjs'
-Bundle 'moll/vim-node'
-Bundle 'jelera/vim-javascript-syntax'
-Bundle 'myhere/vim-nodejs-complete'
+Plugin 'moll/vim-node'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'myhere/vim-nodejs-complete'
   let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
-Bundle 'guileen/vim-node-dict'
+Plugin 'guileen/vim-node-dict'
   au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node-dict/dict/node.dict
-Bundle 'pangloss/vim-javascript'
-"Bundle 'vim-scripts/JavaScript-Indent'
+Plugin 'pangloss/vim-javascript'
+"Plugin 'vim-scripts/JavaScript-Indent'
 
-"Bundles requires additional sources or installation steps
-Bundle 'Valloric/YouCompleteMe'
+"Plugins requires additional sources or installation steps
+Plugin 'Valloric/YouCompleteMe'
   " sh bundle/youcompleteme/install.sh --clang-completer
-Bundle 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
   " if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
   " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
-Bundle 'marijnh/tern_for_vim'
+Plugin 'marijnh/tern_for_vim'
   " run npm install in 'bundle/tern_for_vim'
 
+call vundle#end()
 filetype plugin indent on     " required!
 "
 " Brief help
-" :BundleList          - list configured bundles
-" :BundleInstall(!)    - install(update) bundles
-" :BundleSearch(!) foo - search(or refresh cache first) for foo
-" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+" :PluginList          - list configured bundles
+" :PluginInstall(!)    - install(update) bundles
+" :PluginSearch(!) foo - search(or refresh cache first) for foo
+" :PluginClean(!)      - confirm(or auto-approve) removal of unused bundles
 "
 " see :h vundle for more details or wiki for FAQ
-" NOTE: comments after Bundle command are not allowed..
+" NOTE: comments after Plugin command are not allowed..
 
 " Turn on syntax highlighting
 syn on
@@ -113,6 +115,8 @@ set softtabstop=4
 set shiftwidth=2
 set expandtab
 
+set textwidth=80
+
 set laststatus=2
 set number
 set ruler
@@ -140,7 +144,7 @@ augroup startgroup
 
   "
   au BufRead *.tmpl set filetype=html
-  au BufRead *.html.erb setfiletype eruby.html
+  au BufRead *.html.erb set filetype=eruby.html
 
   " and show tab number in tab label
   au VimEnter * set guitablabel=%N)\ %M%t
@@ -158,13 +162,28 @@ augroup END
 " Eclim
 let g:EclimCompletionMethod = 'omnifunc'
 
+set pastetoggle=<F3>
+
 " mapping
 let mapleader=","
 
-set pastetoggle=<F3>
+" Auto format
+map === mmgg=G`m^zz
+
+" close all buffers
+nmap <leader>D :bufdo bd<CR>
 
 " Fast saving
 nmap <leader>ww :w<cr>
+
+" Center screen when scrolling search results
+nmap n nzz
+nmap N Nzz
+
+" Map ESC
+imap jj <ESC>
+
+imap <C-K> <cr><Esc>O
 
 " quick align
 map <leader><leader>a :Align = , : => -><cr>
@@ -182,15 +201,6 @@ nnoremap <Space> 15<C-E>
 nnoremap <S-Space> 15<C-Y>
 
 set guioptions-=m
-" Cursor movement in Insert mode
-inoremap <A-h> <Left>
-inoremap <A-l> <Right>
-inoremap <A-j> <Down>
-inoremap <A-k> <Up>
-inoremap <M-h> <Left>
-inoremap <M-l> <Right>
-inoremap <M-j> <Down>
-inoremap <M-k> <Up>
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
