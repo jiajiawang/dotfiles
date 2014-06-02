@@ -15,6 +15,8 @@ Plugin 'gmarik/Vundle.vim'
 
 " My Plugins here:
 Plugin 'Raimondi/delimitMate'
+  let delimitMate_expand_space=1
+  let delimitMate_expand_cr=1
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
@@ -116,6 +118,7 @@ set shiftwidth=2
 set expandtab
 
 set textwidth=80
+set formatoptions=cq
 
 set laststatus=2
 set number
@@ -137,7 +140,6 @@ augroup startgroup
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
@@ -157,6 +159,10 @@ augroup startgroup
   au BufRead *.log setlocal autoread | normal G
   "au FileChangedShellPost *.log normal G
 
+  autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#592929
+  autocmd BufEnter * match OverLength /\%80v./
+
+  autocmd FileType ruby let b:surround_45 = "do\n \r \nend"
 augroup END
 
 " Eclim
