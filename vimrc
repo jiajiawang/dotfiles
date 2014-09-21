@@ -22,19 +22,28 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-ruby/vim-ruby'
+  let g:rubycomplete_buffer_loading = 1
+  let g:rubycomplete_classes_in_global = 1
+  let g:rubycomplete_rails = 1
+  let g:rubycomplete_use_bundler = 1
+  let ruby_operators = 1
+  let ruby_space_errors = 1
+  " let ruby_fold = 1
+Plugin 'slim-template/vim-slim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
   let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
+  let g:UltiSnipsListSnippets="<C-f>"
 Plugin 'honza/vim-snippets'
 Plugin 'scrooloose/nerdcommenter'
+  let g:NERDSpaceDelims=1
 Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
 Plugin 'scrooloose/syntastic'
 Plugin 'kien/ctrlp.vim'
-  let g:ctrlp_clear_cache_on_exit = 0
 Plugin 'ap/vim-css-color'
 Plugin 'matchit.zip'
 Plugin 'Align'
@@ -43,7 +52,8 @@ Plugin 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_start_level = 2
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'mattn/emmet-vim'
-Plugin 'mileszs/ack.vim'
+" Plugin 'mileszs/ack.vim'
+  " let g:ackprg = 'ag --nogroup --nocolor --column'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'bling/vim-airline'
   let g:airline_left_sep=' '
@@ -89,7 +99,7 @@ syn on
 " color scheme
 set t_Co=256
 set background=dark
-color kolor
+color solarized
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
 
@@ -116,6 +126,8 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=2
 set expandtab
+set lcs=tab:->
+set list
 
 set textwidth=80
 set formatoptions=cq
@@ -130,12 +142,17 @@ set complete+=k
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 set selection=exclusive
 
+set previewheight=20
+set splitbelow
+set splitright
+set diffopt+=vertical
+
 " always show tabs in gvim, but not vim
 "set showtabline=2
 
 augroup startgroup
   "
-  autocmd FileType perl,html,javascript,css,xml setlocal shiftwidth=4
+  " autocmd FileType perl,html,css,xml setlocal shiftwidth=4
 
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -159,28 +176,47 @@ augroup startgroup
   au BufRead *.log setlocal autoread | normal G
   "au FileChangedShellPost *.log normal G
 
-  autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#592929
-  autocmd BufEnter * match OverLength /\%80v./
+  autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=darkgrey guibg=#592929
+  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
 
-  autocmd FileType ruby let b:surround_45 = "do\n \r \nend"
+  autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
+
+  autocmd BufReadPost fugitive://* set bufhidden=delete
 augroup END
+
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
 
 " Eclim
 let g:EclimCompletionMethod = 'omnifunc'
 
 set pastetoggle=<F3>
+let g:html_indent_tags = 'li\|p'
 
 " mapping
 let mapleader=","
 
 " Auto format
 map === mmgg=G`m^zz
+nnoremap <leader>rtw :%s/\s\+$//e<CR>
 
 " close all buffers
 nmap <leader>D :bufdo bd<CR>
 
 " Fast saving
 nmap <leader>ww :w<cr>
+
+" Fast cnext, copen
+nmap <C-n> :cnext<cr>
+nmap <C-b> :cprev<cr>
 
 " Center screen when scrolling search results
 nmap n nzz
@@ -192,7 +228,9 @@ imap jj <ESC>
 imap <C-K> <cr><Esc>O
 
 " quick align
-map <leader><leader>a :Align = , : => -><cr>
+map <leader><leader>a :Align = =>
+map <leader>a: :Align :<cr>
+map <leader>a> :Align =><cr>
 
 " Treat long lines as break lines
 map j gj

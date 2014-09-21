@@ -1,0 +1,31 @@
+snippet p "params[:name]" w
+params[:${1:name}]$0
+endsnippet
+
+snippet descaction "rspec describe action" b
+describe "${1:GET} #${2:action}" do
+  it "responds successfully with an HTTP 200 status code" do
+    ${1/.*/\L$0\E/} :$2
+    expect(response).to be_success
+    expect(response).to have_http_status(200)
+  end
+
+  it "renders the $2 template" do
+    ${1/.*/\L$0\E/} :$2
+    expect(response).to render_template("$2")
+  end
+
+  it "loads all of the ${3:object} into @$3s" do
+    ${1/.*/\L$0\E/} :$2
+    expect(assigns(:$3s)).to match_array($4)
+  end
+end
+endsnippet
+
+snippet it200 "rspec it respondes 200" b
+it 'responds successfully with an HTTP 200 status code' do
+  get :${1:action}
+  expect(response).to be_success
+  expect(response).to have_http_status(200)
+end
+endsnippet

@@ -1,19 +1,107 @@
-snippet tif "tmpl_if" w
-<TMPL_IF ${1:true}>$2</TMPL_IF>$0
+# snippet tif "tmpl_if" w
+# <TMPL_IF ${1:true}>$2</TMPL_IF>$0
+# endsnippet
+
+# snippet tvar "tmpl_var" w
+# <TMPL_VAR NAME="$1">$0
+# endsnippet
+
+# snippet tife "tmpl_if_else" w
+# <TMPL_IF $1>$2<TMPL_ELSE>$3</TMPL_IF>$0
+# endsnippet
+
+# snippet tloop "tmpl_loop"
+# <TMPL_LOOP ${1:loop_name}>$2</TMPL_LOOP>$0
+# endsnippet
+
+# snippet tunless "templ_unless" w
+# <TMPL_UNLESS $1>$2</TMPL_UNLESS>$0
+# endsnippet
+snippet bsdd "bootstrap dropdown" b
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+    ${1:Dropdown}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+    <li role="presentation" class="divider"></li>
+  </ul>
+</div>
 endsnippet
 
-snippet tvar "tmpl_var" w
-<TMPL_VAR NAME="$1">$0
+snippet bslg "bootstrap list-group ul" b
+<ul class="list-group">
+  <li class="list-group-item">$1</li>
+  <li class="list-group-item">$2</li>
+  <li class="list-group-item">$3</li>
+  <li class="list-group-item">$4</li>
+  <li class="list-group-item">$5</li>
+</ul>
 endsnippet
 
-snippet tife "tmpl_if_else" w
-<TMPL_IF $1>$2<TMPL_ELSE>$3</TMPL_IF>$0
+snippet bslgdiv "bootstrap list-group div" b
+<div class="list-group">
+  <a class="list-group-item">$1</a>
+  <a class="list-group-item">$2</a>
+  <a class="list-group-item">$3</a>
+</div>
 endsnippet
 
-snippet tloop "tmpl_loop"
-<TMPL_LOOP ${1:loop_name}>$2</TMPL_LOOP>$0
+snippet bspanel "bootstrap panel" b
+<div class="panel panel-${1:default}">
+  <div class="panel-heading"></div>
+  <div class="panel-body"></div>
+  <div class="panel-footer"></div>
+</div>
 endsnippet
 
-snippet tunless "templ_unless" w
-<TMPL_UNLESS $1>$2</TMPL_UNLESS>$0
+snippet bsfg "bootstrap form-group" b
+<div class="form-group">
+  <label for="$1">$2</label>
+  <input type="text" class="form-control" name="$1" placeholder="$3">
+</div>
+endsnippet
+
+snippet bsig "bootstrap input-group" b
+<div class="input-group${1: input-group-lg}">
+  <span class="input-group-addon">$2</span>
+  <input type="text" class="form-control" name="$3" placeholder="$4">
+</div>
+endsnippet
+
+snippet bsme "bootstrap media" b
+<div class="media">
+  <a class="pull-left" href="#">
+    <img class="media-object" src="" alt="">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">Media heading</h4>
+    <p></p>
+  </div>
+</div>
+endsnippet
+
+snippet bsml "bootstrap media-list" b
+<ul class="media-list">
+  <li class="media">
+    <a class="pull-left" href="#">
+      <img class="media-object" src="..." alt="...">
+    </a>
+    <div class="media-body">
+      <h4 class="media-heading">Media heading</h4>
+      <p></p>
+    </div>
+  </li>
+</ul>
+endsnippet
+
+snippet bstn "bootstrap thumbnail" b
+<div class="thumbnail">
+  <img src="$1" alt="${2:thumbnail}">
+  <div class="caption">
+    <h3>${3:Label}</h3>
+    <p></p>
+  </div>
+</div>
 endsnippet
