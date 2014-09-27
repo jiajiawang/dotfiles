@@ -21,6 +21,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-bundler'
 Plugin 'vim-ruby/vim-ruby'
   let g:rubycomplete_buffer_loading = 1
   let g:rubycomplete_classes_in_global = 1
@@ -73,6 +74,9 @@ Plugin 'pangloss/vim-javascript'
 
 "Plugins requires additional sources or installation steps
 Plugin 'Valloric/YouCompleteMe'
+  let g:ycm_complete_in_strings=1
+  let g:ycm_collect_identifiers_from_tags_files=1
+  let g:ycm_seed_identifiers_with_syntax=1
   " sh bundle/youcompleteme/install.sh --clang-completer
 Plugin 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
@@ -138,14 +142,14 @@ set ruler
 set terse
 set scrolloff=5
 
-set complete+=k
+set complete+=k,]
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 set selection=exclusive
 
 set previewheight=20
 set splitbelow
 set splitright
-set diffopt+=vertical
+set diffopt+=vertical,iwhite
 
 " always show tabs in gvim, but not vim
 "set showtabline=2
@@ -164,6 +168,7 @@ augroup startgroup
   "
   au BufRead *.tmpl set filetype=html
   au BufRead *.html.erb set filetype=eruby.html
+  au BufRead *.rb set filetype=ruby.rails
 
   " and show tab number in tab label
   au VimEnter * set guitablabel=%N)\ %M%t
@@ -176,7 +181,7 @@ augroup startgroup
   au BufRead *.log setlocal autoread | normal G
   "au FileChangedShellPost *.log normal G
 
-  autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=darkgrey guibg=#592929
+  autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=white guibg=#592929
   autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
 
   autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
@@ -246,15 +251,22 @@ nnoremap <S-Space> 15<C-Y>
 
 set guioptions-=m
 
-" Search for selected text, forwards or backwards.
+" search for word under cursor
+nnoremap * /<C-R><C-W><CR>
+" grep for word under cursor and highlight
+nnoremap & /<C-R><C-W><CR>:grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+" search for selected text
 vnoremap <silent> * :<C-U>
   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy/<C-R><C-R>=substitute(
-  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gvy/<C-R><C-R>
+  \=substitute(escape(@", '"/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
-vnoremap <silent> # :<C-U>
+" grep for selected text and highlight
+vnoremap <silent> & :<C-U>
   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy?<C-R><C-R>=substitute(
-  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gvy/<C-R><C-R>
+  \=substitute(escape(@", '"/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \:grep! "<C-R><C-R>
+  \=substitute(escape(@", '"/\.*$^~[]()'), '\_s\+', '\\s*\\n\\s*', 'g')<CR>"<CR>
+  \:cw<CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
-
