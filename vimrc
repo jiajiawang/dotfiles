@@ -13,24 +13,15 @@ call vundle#begin()
 " required!
 Plugin 'gmarik/Vundle.vim'
 
-" My Plugins here:
+" General Plugins
 Plugin 'Raimondi/delimitMate'
   let delimitMate_expand_space=1
   let delimitMate_expand_cr=1
+  imap <C-e> <Plug>delimitMateS-Tab
+Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-bundler'
-Plugin 'vim-ruby/vim-ruby'
-  let g:rubycomplete_buffer_loading = 1
-  let g:rubycomplete_classes_in_global = 1
-  let g:rubycomplete_rails = 1
-  let g:rubycomplete_use_bundler = 1
-  let ruby_operators = 1
-  let ruby_space_errors = 1
-  " let ruby_fold = 1
-Plugin 'slim-template/vim-slim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-l>"
@@ -45,7 +36,6 @@ Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
 Plugin 'scrooloose/syntastic'
 Plugin 'kien/ctrlp.vim'
-Plugin 'ap/vim-css-color'
 Plugin 'matchit.zip'
 Plugin 'Align'
 Plugin 'nathanaelkane/vim-indent-guides'
@@ -56,11 +46,35 @@ Plugin 'mattn/emmet-vim'
 " Plugin 'mileszs/ack.vim'
   " let g:ackprg = 'ag --nogroup --nocolor --column'
 Plugin 'christoomey/vim-tmux-navigator'
+" Plugin 'edkolev/tmuxline.vim'
+  " let g:tmuxline_powerline_separators=2
+  " let g:tmuxline_theme = 'airline_insert'
+  " let g:tmuxline_preset = {
+      " \'a'    : '#S',
+      " \'win'  : '#I #W',
+      " \'cwin' : '#I #W',
+      " \'x'    : '%a',
+      " \'y'    : '%R %b %d',
+      " \'z'    : '#H'}
 Plugin 'bling/vim-airline'
-  let g:airline_left_sep=' '
-  let g:airline_right_sep=' '
   let g:airline#extensions#tabline#enabled=1
   let g:airline#extensions#tabline#buffer_nr_show=1
+  if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+  endif
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = ''
+Plugin 'kana/vim-textobj-user'
+Plugin 'sjl/vitality.vim'
+  let g:vitality_fix_cursor=0
+  let g:vitality_always_assume_iterm = 1
+
+" Javascript Plugins
 Plugin 'othree/javascript-libraries-syntax.vim'
   let g:used_javascript_libs='jquery,angularjs'
 Plugin 'moll/vim-node'
@@ -71,6 +85,27 @@ Plugin 'guileen/vim-node-dict'
   au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node-dict/dict/node.dict
 Plugin 'pangloss/vim-javascript'
 "Plugin 'vim-scripts/JavaScript-Indent'
+
+" CSS Plugins
+Plugin 'cakebaker/scss-syntax.vim'
+Plugin 'ap/vim-css-color'
+
+" Ruby Plugins
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-bundler'
+Plugin 'vim-ruby/vim-ruby'
+  let g:rubycomplete_buffer_loading = 1
+  let g:rubycomplete_classes_in_global = 1
+  let g:rubycomplete_rails = 1
+  let g:rubycomplete_load_gemfile = 1
+  let g:rubycomplete_use_bundler = 1
+  let ruby_operators = 1
+  let ruby_space_errors = 1
+  let ruby_fold = 1
+Plugin 'ecomba/vim-ruby-refactoring'
+Plugin 'slim-template/vim-slim'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'jiajiawang/vim-ruby-helper'
 
 "Plugins requires additional sources or installation steps
 Plugin 'Valloric/YouCompleteMe'
@@ -108,7 +143,7 @@ color solarized
 "let g:solarized_termtrans=1
 
 " font
-set guifont=Consolas:h11
+set guifont=Ubuntu\ Mono:h11
 
 " no backup and swap file
 set nobackup
@@ -150,6 +185,7 @@ set previewheight=20
 set splitbelow
 set splitright
 set diffopt+=vertical,iwhite
+set foldlevelstart=2
 
 " always show tabs in gvim, but not vim
 "set showtabline=2
@@ -181,12 +217,18 @@ augroup startgroup
   au BufRead *.log setlocal autoread | normal G
   "au FileChangedShellPost *.log normal G
 
-  autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=white guibg=#592929
-  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
+  autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=cyan guibg=cyan
+  autocmd FileType ruby,vim match OverLengthOrExtraWhiteSpace /\%81v./
+  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\s\+\%#\@<!$/
 
   autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
 
   autocmd BufReadPost fugitive://* set bufhidden=delete
+  " Don't screw up folds when inserting text that might affect them, until
+  " leaving insert mode. Foldmethod is local to the window. Protect against
+  " screwing up folding when switching between windows.
+  autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+  autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
 augroup END
 
 if executable('ag')
@@ -201,7 +243,7 @@ if executable('ag')
 endif
 
 " Eclim
-let g:EclimCompletionMethod = 'omnifunc'
+" let g:EclimCompletionMethod = 'omnifunc'
 
 set pastetoggle=<F3>
 let g:html_indent_tags = 'li\|p'
@@ -254,7 +296,7 @@ set guioptions-=m
 " search for word under cursor
 nnoremap * /<C-R><C-W><CR>
 " grep for word under cursor and highlight
-nnoremap & /<C-R><C-W><CR>:grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+nnoremap & /<C-R><C-W><CR>:grep! "<C-R><C-W>"<CR>:cw<CR>
 " search for selected text
 vnoremap <silent> * :<C-U>
   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>

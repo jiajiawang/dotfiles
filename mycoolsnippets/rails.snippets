@@ -29,3 +29,15 @@ it 'responds successfully with an HTTP 200 status code' do
   expect(response).to have_http_status(200)
 end
 endsnippet
+
+snippet fi "fill_in" b
+fill_in '$1', with: '$2'
+endsnippet
+
+snippet cl "click_link" b
+click_link '$1'
+endsnippet
+
+snippet cb "click_button" b
+click_button '$1'
+endsnippet
