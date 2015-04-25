@@ -1,0 +1,61 @@
+snippet arr "array" w
+array(
+    '${1:key}' => '${2:value}',$0
+)
+endsnippet
+
+snippet arri "inline array" w
+array('${1:key}' => '${2:value}')$0
+endsnippet
+
+snippet : "key => value" w
+'${1:key}' => '${2:value}',
+endsnippet
+
+snippet aa "array access" w
+$${1:array}['${2:name}']$0
+endsnippet
+
+snippet pub "public function" b
+public function ${1:name}($2)
+{
+    $0
+}
+endsnippet
+
+snippet fun "function" w
+function ($1) {
+    $0
+}
+endsnippet
+
+snippet . "->function()" i
+->${1:fun}($2)$0
+endsnippet
+
+snippet ? "<?php ?>" i
+<?php $1 ?>$0
+endsnippet
+
+snippet v "$" i
+$
+endsnippet
+
+snippet php "<?php" b
+<?php
+$0
+endsnippet
+
+snippet action "magento action" b
+public function ${1:new}Action()
+{
+    $0
+    $this->loadLayout();
+    $this->renderLayout();
+    return $this;
+}
+endsnippet
+
+snippet mlog "Mage::log" b
+Mage::log('$1');$0
+endsnippet

@@ -22,6 +22,8 @@ Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-dispatch'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger="<C-l>"
@@ -43,9 +45,17 @@ Plugin 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_start_level = 2
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'mattn/emmet-vim'
+  let g:user_emmet_settings = {
+  \  'indentation' : '  ',
+  \  'php' : {
+  \    'indentation' : '    ',
+  \  }
+  \}
+
 " Plugin 'mileszs/ack.vim'
   " let g:ackprg = 'ag --nogroup --nocolor --column'
 Plugin 'christoomey/vim-tmux-navigator'
+  let g:tmux_navigator_save_on_switch=1
 " Plugin 'edkolev/tmuxline.vim'
   " let g:tmuxline_powerline_separators=2
   " let g:tmuxline_theme = 'airline_insert'
@@ -96,9 +106,9 @@ Plugin 'tpope/vim-bundler'
 Plugin 'vim-ruby/vim-ruby'
   let g:rubycomplete_buffer_loading = 1
   let g:rubycomplete_classes_in_global = 1
-  let g:rubycomplete_rails = 1
-  let g:rubycomplete_load_gemfile = 1
-  let g:rubycomplete_use_bundler = 1
+  " let g:rubycomplete_rails = 1
+  " let g:rubycomplete_load_gemfile = 1
+  " let g:rubycomplete_use_bundler = 1
   let ruby_operators = 1
   let ruby_space_errors = 1
   let ruby_fold = 1
@@ -107,12 +117,19 @@ Plugin 'slim-template/vim-slim'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'jiajiawang/vim-ruby-helper'
 
+" go Plugins
+Plugin 'fatih/vim-go'
+
+" C# Plugins
+Plugin 'OmniSharp/omnisharp-vim'
+  let g:OmniSharp_selector_ui = 'ctrlp'
+
 "Plugins requires additional sources or installation steps
 Plugin 'Valloric/YouCompleteMe'
   let g:ycm_complete_in_strings=1
   let g:ycm_collect_identifiers_from_tags_files=1
   let g:ycm_seed_identifiers_with_syntax=1
-  " sh bundle/youcompleteme/install.sh --clang-completer
+  " sh bundle/youcompleteme/install.sh --clang-completer --omnisharp-completer
 Plugin 'majutsushi/tagbar'
   nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
@@ -137,7 +154,7 @@ filetype plugin indent on     " required!
 syn on
 " color scheme
 set t_Co=256
-set background=dark
+set background=light
 color solarized
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
@@ -154,6 +171,7 @@ set backspace=indent,eol,start " allow backspacing over everything in insert mod
 set showcmd                    " show incomplete cmds down the bottom
 set showmode                   " show current mode down the bottom
 
+set cursorline
 set incsearch                  " find the next search as we type the search
 set hlsearch                   " highlight searchs
 set ignorecase                 " case insensitive search
@@ -178,6 +196,7 @@ set terse
 set scrolloff=5
 
 set complete+=k,]
+set completeopt-=preview
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 set selection=exclusive
 
@@ -193,6 +212,7 @@ set foldlevelstart=2
 augroup startgroup
   "
   " autocmd FileType perl,html,css,xml setlocal shiftwidth=4
+  autocmd FileType php setlocal shiftwidth=4
 
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -203,11 +223,12 @@ augroup startgroup
 
   "
   au BufRead *.tmpl set filetype=html
+  au BufRead *.phtml set filetype=php.html
   au BufRead *.html.erb set filetype=eruby.html
   au BufRead *.rb set filetype=ruby.rails
 
   " and show tab number in tab label
-  au VimEnter * set guitablabel=%N)\ %M%t
+  " au VimEnter * set guitablabel=%N)\ %M%t
 
   " autosave everything when losing focus, ignore warnings from untitled buffers
   au FocusLost * silent! wa
@@ -217,11 +238,15 @@ augroup startgroup
   au BufRead *.log setlocal autoread | normal G
   "au FileChangedShellPost *.log normal G
 
+  " autocmd BufEnter * highlight OverLength ctermbg=cyan guibg=cyan
+  " autocmd BufEnter * highlight ExtraWhiteSpace ctermbg=cyan guibg=cyan
   autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=cyan guibg=cyan
-  autocmd FileType ruby,vim match OverLengthOrExtraWhiteSpace /\%81v./
-  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\s\+\%#\@<!$/
+  " autocmd BufEnter * match OverLength /\%81v./
+  " autocmd BufEnter * match ExtraWhiteSpace /\s\+\%#\@<!$/
+  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
 
   autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
+  autocmd FileType php let b:surround_63 = "<?php \r ?>"
 
   autocmd BufReadPost fugitive://* set bufhidden=delete
   " Don't screw up folds when inserting text that might affect them, until
@@ -291,6 +316,8 @@ vnoremap <S-Tab> <gv
 nnoremap <Space> 15<C-E>
 nnoremap <S-Space> 15<C-Y>
 
+cmap W w !sudo tee % >/dev/null<CR>
+
 set guioptions-=m
 
 " search for word under cursor
@@ -312,3 +339,4 @@ vnoremap <silent> & :<C-U>
   \=substitute(escape(@", '"/\.*$^~[]()'), '\_s\+', '\\s*\\n\\s*', 'g')<CR>"<CR>
   \:cw<CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
+

@@ -9,3 +9,13 @@ endsnippet
 snippet > ":key => value"
 :${1:key} => ${2:value}
 endsnippet
+
+snippet expn "expect to not" b
+expect($1).to_not $2
+endsnippet
+
+snippet expb "expect do end" b
+expect do
+  $1
+end.to $2
+endsnippet
