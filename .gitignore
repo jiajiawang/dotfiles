@@ -1,1 +1,4 @@
 vim/bundle/*
+tmux/Session.vim
+tmux/resurrect/
+tmux/plugins/
