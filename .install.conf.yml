@@ -6,6 +6,12 @@
     ~/.vimrc: vimrc
     ~/.tmux.conf: tmux.conf
     ~/.tmux: tmux/
+    ~/.zprezto: .zprezto/
+    ~/.zprezto/modules/prompt/functions/prompt_jiajia_setup: zprezto_prompt_jiajia_setup
+    ~/.zshenv: zshenv
+    ~/.zshrc: zshrc
+    ~/.zprofile: zprofile
+    ~/.zpreztorc: zpreztorc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
