@@ -37,7 +37,11 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
 Plugin 'scrooloose/syntastic'
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_html_tidy_exec = 'tidy5'
 Plugin 'kien/ctrlp.vim'
+  nnoremap <C-b> :CtrlPBuffer<cr>
 Plugin 'matchit.zip'
 Plugin 'Align'
 Plugin 'nathanaelkane/vim-indent-guides'
@@ -54,8 +58,8 @@ Plugin 'mattn/emmet-vim'
 
 " Plugin 'mileszs/ack.vim'
   " let g:ackprg = 'ag --nogroup --nocolor --column'
-Plugin 'christoomey/vim-tmux-navigator'
-  let g:tmux_navigator_save_on_switch=1
+" Plugin 'christoomey/vim-tmux-navigator'
+  " let g:tmux_navigator_save_on_switch=1
 " Plugin 'edkolev/tmuxline.vim'
   " let g:tmuxline_powerline_separators=2
   " let g:tmuxline_theme = 'airline_insert'
@@ -111,11 +115,15 @@ Plugin 'vim-ruby/vim-ruby'
   " let g:rubycomplete_use_bundler = 1
   let ruby_operators = 1
   let ruby_space_errors = 1
-  let ruby_fold = 1
+  " let ruby_fold = 1
 Plugin 'ecomba/vim-ruby-refactoring'
 Plugin 'slim-template/vim-slim'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'jiajiawang/vim-ruby-helper'
+Plugin 'jiajiawang/vim-rubocop'
+Plugin 'rainerborene/vim-reek'
+  let g:reek_always_show = 0
+  let g:reek_on_loading = 0
 
 " go Plugins
 Plugin 'fatih/vim-go'
@@ -264,7 +272,7 @@ if executable('ag')
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_use_caching = 0
 endif
 
 " Eclim
@@ -286,9 +294,13 @@ nmap <leader>D :bufdo bd<CR>
 " Fast saving
 nmap <leader>ww :w<cr>
 
-" Fast cnext, copen
-nmap <C-n> :cnext<cr>
-nmap <C-b> :cprev<cr>
+" Fast lnext, lprev
+nmap <leader>ln :lnext<cr>
+nmap <leader>lp :lprev<cr>
+
+" Fast cnext, cprev
+nmap <leader>cn :cnext<cr>
+nmap <leader>cp :cprev<cr>
 
 " Center screen when scrolling search results
 nmap n nzz

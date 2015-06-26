@@ -23,8 +23,9 @@ if which rbenv &>/dev/null ; then
   eval "$(rbenv init - --no-rehash)"
 fi
 
-# # Local config
-# [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
+# Local config
+[[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
+source ~/.zalias
 
 # load nvm
 export NVM_DIR=~/.nvm

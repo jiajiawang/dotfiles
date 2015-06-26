@@ -12,6 +12,7 @@
     ~/.zshrc: zshrc
     ~/.zprofile: zprofile
     ~/.zpreztorc: zpreztorc
+    ~/.zalias: zalias
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

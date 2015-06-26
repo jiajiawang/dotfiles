@@ -1,0 +1,5 @@
+#zsh aliases
+
+# bundle
+alias bi='bundle install'
+alias -g be='bundle exec'
