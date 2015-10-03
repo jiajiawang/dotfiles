@@ -17,7 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'Raimondi/delimitMate'
   let delimitMate_expand_space=1
   let delimitMate_expand_cr=1
-  imap <C-e> <Plug>delimitMateS-Tab
+  imap <C-B> <Plug>delimitMateS-Tab
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
@@ -37,9 +37,10 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
 Plugin 'scrooloose/syntastic'
-  let g:syntastic_auto_loc_list = 1
+  " let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_wq = 0
   let g:syntastic_html_tidy_exec = 'tidy5'
+  let g:syntastic_javascript_checkers = ['eslint']
 Plugin 'kien/ctrlp.vim'
   nnoremap <C-b> :CtrlPBuffer<cr>
 Plugin 'matchit.zip'
@@ -87,17 +88,20 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'sjl/vitality.vim'
   let g:vitality_fix_cursor=0
   let g:vitality_always_assume_iterm = 1
+Plugin 'vim-scripts/closetag.vim'
 
 " Javascript Plugins
+Plugin 'pangloss/vim-javascript'
 Plugin 'othree/javascript-libraries-syntax.vim'
-  let g:used_javascript_libs='jquery,angularjs'
+  let g:used_javascript_libs='jquery,angularjs,react'
 Plugin 'moll/vim-node'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'myhere/vim-nodejs-complete'
   let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
 Plugin 'guileen/vim-node-dict'
   au FileType javascript set dictionary+=$HOME/.vim/bundle/vim-node-dict/dict/node.dict
-Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+  let g:jsx_ext_required=0
 "Plugin 'vim-scripts/JavaScript-Indent'
 
 " CSS Plugins
@@ -132,8 +136,16 @@ Plugin 'fatih/vim-go'
 Plugin 'OmniSharp/omnisharp-vim'
   let g:OmniSharp_selector_ui = 'ctrlp'
 
+Plugin 'jeaye/color_coded'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-easytags'
+  " let g:easytags_auto_update = 0
+  " let g:easytags_auto_highlight = 0
+  " let g:easytags_dynamic_files = 1
+
 "Plugins requires additional sources or installation steps
 Plugin 'Valloric/YouCompleteMe'
+  let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
   let g:ycm_complete_in_strings=1
   let g:ycm_collect_identifiers_from_tags_files=1
   let g:ycm_seed_identifiers_with_syntax=1
@@ -203,6 +215,7 @@ set ruler
 set terse
 set scrolloff=5
 
+set tags+=./tags;
 set complete+=k,]
 set completeopt-=preview
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
@@ -220,7 +233,7 @@ set foldlevelstart=2
 augroup startgroup
   "
   " autocmd FileType perl,html,css,xml setlocal shiftwidth=4
-  autocmd FileType php setlocal shiftwidth=4
+  autocmd FileType php,c setlocal shiftwidth=4
 
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -295,10 +308,12 @@ nmap <leader>D :bufdo bd<CR>
 nmap <leader>ww :w<cr>
 
 " Fast lnext, lprev
+nmap <leader>lf :lfirst<cr>
 nmap <leader>ln :lnext<cr>
 nmap <leader>lp :lprev<cr>
 
 " Fast cnext, cprev
+nmap <leader>cf :cfirst<cr>
 nmap <leader>cn :cnext<cr>
 nmap <leader>cp :cprev<cr>
 

@@ -1,0 +1,17 @@
+snippet def "definition" b
+"$1": {
+  "type": "object",
+  "properties": {
+	"id": {
+	  "type": "integer"
+	},
+	"name": {
+	  "type": "string"
+	}$2
+  }
+},
+endsnippet
+
+snippet "(\w)" "Description" br
+"{match.group(1)}": $1
+endsnippet
