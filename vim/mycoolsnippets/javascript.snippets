@@ -1,3 +1,29 @@
 snippet re "require" b
 var ${1:http} = require('${2:$1}');$0
 endsnippet
+
+snippet it "Mocha it" b
+it("$1", () => {
+  $0
+});
+endsnippet
+
+snippet desc "Mocha describe" b
+describe("$1", () => {
+  $0
+});
+endsnippet
+
+snippet af "arrow function" w
+($1) => {$0}
+endsnippet
+
+snippet exp "Mocha expectation" b
+expect($1).to
+endsnippet
+
+snippet cont "Mocha context" b
+context("$1", () => {
+  $0
+});
+endsnippet
