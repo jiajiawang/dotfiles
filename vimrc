@@ -56,9 +56,8 @@ Plugin 'mattn/emmet-vim'
   \    'indentation' : '    ',
   \  }
   \}
+" Plugin 'airblade/vim-gitgutter'
 
-" Plugin 'mileszs/ack.vim'
-  " let g:ackprg = 'ag --nogroup --nocolor --column'
 " Plugin 'christoomey/vim-tmux-navigator'
   " let g:tmux_navigator_save_on_switch=1
 " Plugin 'edkolev/tmuxline.vim'
@@ -103,6 +102,7 @@ Plugin 'guileen/vim-node-dict'
 Plugin 'mxw/vim-jsx'
   let g:jsx_ext_required=0
 "Plugin 'vim-scripts/JavaScript-Indent'
+Plugin 'kchmck/vim-coffee-script'
 
 " CSS Plugins
 Plugin 'cakebaker/scss-syntax.vim'
@@ -128,15 +128,16 @@ Plugin 'jiajiawang/vim-rubocop'
 Plugin 'rainerborene/vim-reek'
   let g:reek_always_show = 0
   let g:reek_on_loading = 0
+Plugin 'tpope/vim-cucumber'
 
 " go Plugins
 Plugin 'fatih/vim-go'
 
 " C# Plugins
-Plugin 'OmniSharp/omnisharp-vim'
-  let g:OmniSharp_selector_ui = 'ctrlp'
+" Plugin 'OmniSharp/omnisharp-vim'
+  " let g:OmniSharp_selector_ui = 'ctrlp'
 
-Plugin 'jeaye/color_coded'
+" Plugin 'jeaye/color_coded'
 " Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-easytags'
   " let g:easytags_auto_update = 0
@@ -150,8 +151,8 @@ Plugin 'Valloric/YouCompleteMe'
   let g:ycm_collect_identifiers_from_tags_files=1
   let g:ycm_seed_identifiers_with_syntax=1
   " sh bundle/youcompleteme/install.sh --clang-completer --omnisharp-completer
-Plugin 'majutsushi/tagbar'
-  nnoremap <f2> :TagbarToggle<cr>
+" Plugin 'majutsushi/tagbar'
+  " nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
   " if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
   " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
@@ -174,7 +175,7 @@ filetype plugin indent on     " required!
 syn on
 " color scheme
 set t_Co=256
-set background=light
+set background=dark
 color solarized
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
@@ -279,7 +280,7 @@ augroup END
 
 if executable('ag')
   " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --vimgrep\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -343,7 +344,7 @@ vnoremap <S-Tab> <gv
 nnoremap <Space> 15<C-E>
 nnoremap <S-Space> 15<C-Y>
 
-cmap W w !sudo tee % >/dev/null<CR>
+" cmap W w !sudo tee % >/dev/null<CR>
 
 set guioptions-=m
 

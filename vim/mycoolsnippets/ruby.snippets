@@ -42,3 +42,8 @@ endsnippet
 snippet 'initWith\w+:' "Description" b
 
 endsnippet
+
+snippet '(Giv|Wh|Th)en' "Given|When|Then" r
+`!p snip.rv = match.group(0)`(/^$0$/) do
+end
+endsnippet
