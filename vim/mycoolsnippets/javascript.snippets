@@ -37,3 +37,30 @@ endsnippet
 snippet debug "JSON.stringfy" b
 console.log(JSON.stringify(subject(), null, 2));
 endsnippet
+
+snippet rcc "React createClass" b
+var ${1:ClassName} = React.createClass({
+  render: function() {
+    return (
+      ${VISUAL}$2
+    )
+  }
+});
+endsnippet
+
+snippet var "var" b
+var ${1:name} = $2;
+$0
+endsnippet
+
+snippet f "function()" w
+function($1) {
+  $2
+}
+endsnippet
+
+snippet forEach "forEach" b
+forEach(function(_, i) {
+  $1
+});
+endsnippet
