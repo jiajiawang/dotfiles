@@ -47,3 +47,19 @@ snippet '(Giv|Wh|Th)en' "Given|When|Then" r
 `!p snip.rv = match.group(0)`(/^$0$/) do
 end
 endsnippet
+
+snippet be "before do" b
+before do
+  $0
+end
+endsnippet
+
+snippet beb "before {  }" b
+before { $1 }$0
+endsnippet
+
+snippet 'desc|cont|it' "rspec do" r
+`!p snip.rv = {'desc': 'describe', 'cont': 'context', 'it': 'it'}[match.group(0)]` "$1" do
+  $2
+end$0
+endsnippet
