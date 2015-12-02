@@ -13,6 +13,9 @@
     ~/.zprofile: zprofile
     ~/.zpreztorc: zpreztorc
     ~/.zalias: zalias
+    ~/.rbenv/plugins: rbenv/plugins
+    ~/.rbenv/default-gems: rbenv/default-gems
+    ~/.gemrc: gemrc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
