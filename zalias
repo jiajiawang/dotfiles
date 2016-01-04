@@ -3,3 +3,4 @@
 # bundle
 alias bi='bundle install'
 alias -g be='bundle exec'
+alias vim='nvim'
