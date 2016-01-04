@@ -7,12 +7,12 @@
     ~/.tmux.conf: tmux.conf
     ~/.tmux: tmux/
     ~/.zprezto: .zprezto/
-    ~/.zprezto/modules/prompt/functions/prompt_jiajia_setup: zprezto_prompt_jiajia_setup
     ~/.zshenv: zshenv
     ~/.zshrc: zshrc
     ~/.zprofile: zprofile
     ~/.zpreztorc: zpreztorc
     ~/.zalias: zalias
+    ~/.zfunctions: zfunctions/
     ~/.rbenv/plugins: rbenv/plugins
     ~/.rbenv/default-gems: rbenv/default-gems
     ~/.gemrc: gemrc
