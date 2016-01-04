@@ -10,3 +10,7 @@ export RUBYMOTION_ANDROID_NDK="${ZDOTDIR:-$HOME}/.rubymotion-android/ndk"
 export RUBYMOTION_ANDROID_SDK="${ZDOTDIR:-$HOME}/.rubymotion-android/sdk"
 
 fpath=(/Users/JJ/.zsh/completion $fpath)
+
+# Load nvm
+export NVM_DIR=~/.nvm
+. $(brew --prefix nvm)/nvm.sh

@@ -20,16 +20,12 @@ export EDITOR=$VISUAL
 
 # # load rbenv if available
 if which rbenv &>/dev/null ; then
-  eval "$(rbenv init - --no-rehash)"
+  eval "$(rbenv init - zsh --no-rehash)"
 fi
 
 # Local config
 [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
 source ~/.zalias
-
-# load nvm
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
 
 # set go path
 export GOPATH=~/Workspace/go
