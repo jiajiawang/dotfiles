@@ -31,5 +31,3 @@ source ~/.zalias
 
 # set go path
 export GOPATH=~/Workspace/go
-
-$(boot2docker shellinit 2> /dev/null)

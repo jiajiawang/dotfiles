@@ -14,3 +14,6 @@ fpath=(/Users/JJ/.zsh/completion $fpath)
 # Load nvm
 export NVM_DIR=~/.nvm
 . $(brew --prefix nvm)/nvm.sh
+
+export VISUAL=vim
+export EDITOR=$VISUAL

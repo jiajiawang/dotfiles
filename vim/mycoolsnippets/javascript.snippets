@@ -34,6 +34,12 @@ beforeEach(() => {
 });
 endsnippet
 
+snippet ae "Mocha afterEach" b
+afterEach(() => {
+  $0
+});
+endsnippet
+
 snippet debug "JSON.stringfy" b
 console.log(JSON.stringify(subject(), null, 2));
 endsnippet
@@ -63,4 +69,114 @@ snippet forEach "forEach" b
 forEach(function(_, i) {
   $1
 });
+endsnippet
+
+snippet gdiv "Grid div" b
+<div className="narrow-col-${1:4} standard-col-${2:12} wide-col-${3:16}$4">
+  $0
+</div>
+endsnippet
+
+
+# React
+
+snippet Component "React Component" b
+import React from "react";
+
+export default class Component extends React.Component {
+  displayName: "${1:Name}"
+
+  componentDidMount() {
+  }
+
+  render() {
+    return (
+      $2
+    );
+  }
+}
+
+Component.propTypes = {
+};
+
+Component.defaultProps = {
+};
+
+export { Component };
+endsnippet
+
+snippet chai "chai" b
+import R from "ramda";
+import React from "react";
+import { shallow } from "enzyme";
+import { TestScheduler, ReactiveTest } from "rx";
+import rewire from "utils/rewire";
+
+import { Component, __RewireAPI__ } from "$1";
+
+import chaiEnzyme from "chai-enzyme";
+chai.use(chaiEnzyme());
+
+const { onNext, onError, onCompleted } = ReactiveTest;
+
+describe("$2", () => {
+  let subject;
+  let props;
+  let reactContext;
+  let rewireSandbox;
+  let actions;
+  let store;
+  let scheduler;
+  let http;
+
+  beforeEach(() => {
+    props = {};
+    reactContext = {};
+
+    scheduler = new TestScheduler();
+    http = { put: sinon.stub() };
+
+    http.put.returns(scheduler.createColdObservable(
+      onNext(100, { response: {}}),
+      onCompleted(100)
+    ));
+
+    subject = R.memoize(() => shallow(
+      <Component { ...props }/>,
+      { context: reactContext }
+    ));
+
+    store = {
+      getState: sinon.stub().returns("state")
+    };
+
+    actions = {
+      updateProfile: sinon.stub(),
+      saveProfile: sinon.stub()
+    };
+
+    rewireSandbox = rewire(__RewireAPI__);
+    rewireSandbox.stub({
+      Store: store,
+      Actions: actions
+    });
+  });
+
+  afterEach(() => {
+    scheduler.stop();
+    rewireSandbox.restore();
+  });
+
+  it("connects to Store", () => {
+    expect(Component.getStores()).to.include(store);
+  });
+
+  it("gets props from Store state", () => {
+    expect(Component.getPropsFromStores()).to.equal("state");
+  });
+  it("renders without errors", () => {
+    expect(subject()).to.be.present();
+  });
+
+  $0
 endsnippet

@@ -37,16 +37,17 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
   nnoremap <f1> :NERDTreeToggle<cr>
 Plugin 'scrooloose/syntastic'
-  " let g:syntastic_auto_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
   let g:syntastic_check_on_wq = 0
   let g:syntastic_html_tidy_exec = 'tidy5'
   let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'reek']
 Plugin 'kien/ctrlp.vim'
   nnoremap <C-b> :CtrlPBuffer<cr>
 Plugin 'matchit.zip'
 Plugin 'Align'
 Plugin 'nathanaelkane/vim-indent-guides'
-  let g:indent_guides_guide_size = 1
+  " let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'mattn/emmet-vim'
@@ -88,6 +89,8 @@ Plugin 'sjl/vitality.vim'
   let g:vitality_fix_cursor=0
   let g:vitality_always_assume_iterm = 1
 Plugin 'vim-scripts/closetag.vim'
+Plugin 'alvan/vim-closetag'
+Plugin 'christoomey/vim-tmux-navigator'
 
 " Javascript Plugins
 Plugin 'pangloss/vim-javascript'
@@ -266,6 +269,7 @@ augroup startgroup
   " autocmd BufEnter * match OverLength /\%81v./
   " autocmd BufEnter * match ExtraWhiteSpace /\s\+\%#\@<!$/
   autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
+  autocmd BufEnter *.js match OverLengthOrExtraWhiteSpace /\%121v.\|\s\+\%#\@<!$/
 
   autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
   autocmd FileType php let b:surround_63 = "<?php \r ?>"
@@ -322,6 +326,9 @@ nmap <leader>cp :cprev<cr>
 nmap n nzz
 nmap N Nzz
 
+" Beatify json file
+nmap <leader>bfj :%!python -m json.tool<cr>
+
 " Map ESC
 imap jj <ESC>
 
@@ -336,6 +343,9 @@ map <leader>a> :Align =><cr>
 map j gj
 map k gk
 
+" workaround for nvim vim-tmux-navigator issue
+nmap <BS> <C-W>h
+
 " Shifting blocks visually
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
@@ -345,6 +355,8 @@ nnoremap <Space> 15<C-E>
 nnoremap <S-Space> 15<C-Y>
 
 " cmap W w !sudo tee % >/dev/null<CR>
+"
+imap <C-S-Space> <C-X><C-O>
 
 set guioptions-=m
 
