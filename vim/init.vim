@@ -43,15 +43,17 @@ Plug 'neomake/neomake', { 'on': 'Neomake' }
   let g:neomake_message_sign = {'text': '👉', 'texthl': 'NeomakeMessageSign'}
   let g:neomake_info_sign = {'text': 'ℹ️', 'texthl': 'NeomakeInfoSign'}
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
+  let g:fzf_history_dir = '~/.fzf-history'
   nnoremap <C-p> :GFiles<cr>
   nnoremap <C-b> :Buffers<cr>
+  nnoremap <C-g> :Ag<cr>
   nmap <leader><tab> <plug>(fzf-maps-n)
   xmap <leader><tab> <plug>(fzf-maps-x)
   omap <leader><tab> <plug>(fzf-maps-o)
   imap <c-x><c-k> <plug>(fzf-complete-word)
-  imap <c-x><c-f> <plug>(fzf-complete-path)
-  imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-  imap <c-x><c-l> <plug>(fzf-complete-line)
+  " imap <c-x><c-f> <plug>(fzf-complete-path)
+  " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+  " imap <c-x><c-l> <plug>(fzf-complete-line)
 Plug 'kassio/neoterm'
   let g:neoterm_rspec_lib_cmd = 'bin/rspec'
   " let g:neoterm_run_tests_bg = 1
@@ -326,16 +328,7 @@ aug END
 if executable('ag')
   " Use Ag over Grep
   set grepprg=ag\ --vimgrep\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  " let g:ctrlp_use_caching = 0
 endif
-
-" Eclim
-" let g:EclimCompletionMethod = 'omnifunc'
 
 set pastetoggle=<F3>
 let g:html_indent_tags = 'li\|p'
@@ -395,7 +388,7 @@ vnoremap <S-Tab> <gv
 nnoremap <Space> 15<C-E>
 nnoremap <S-Space> 15<C-Y>
 
-nmap <leader>ss vi{:sort<cr>
+nmap <leader>ss vii:sort<cr>
 
 " cmap W w !sudo tee % >/dev/null<CR>
 "
