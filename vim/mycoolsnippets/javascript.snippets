@@ -15,7 +15,7 @@ describe("$1", () => {
 endsnippet
 
 snippet af "arrow function" w
-($1) => {$0}
+($1) => $0
 endsnippet
 
 snippet exp "Mocha expectation" b
@@ -24,6 +24,9 @@ endsnippet
 
 snippet cont "Mocha context" b
 context("$1", () => {
+  beforeEach(() => {
+    $2
+  });
   $0
 });
 endsnippet
@@ -81,14 +84,9 @@ endsnippet
 # React
 
 snippet Component "React Component" b
-import React from "react";
+import React, { PropTypes } from "react";
 
-export default class Component extends React.Component {
-  displayName: "${1:Name}"
-
-  componentDidMount() {
-  }
-
+class ${1:Component} extends React.Component {
   render() {
     return (
       $2
@@ -96,20 +94,123 @@ export default class Component extends React.Component {
   }
 }
 
+$1.displayName = "$1";
+
+$1.propTypes = {
+};
+
+$1.defaultProps = {
+};
+
+export default $1;
+endsnippet
+
+snippet ComponentAlt "Alt Component" b
+import React from "react";
+import connectToStores from "alt/utils/connectToStores";
+
+import Store from "stores/$2-store";
+import Actions from "actions/$2-actions";
+
+class Component extends React.Component {
+  static getStores() {
+    return [Store];
+  }
+
+  static getPropsFromStores() {
+    return Store.getState();
+  }
+
+  componentDidMount() {
+  }
+
+  render() {
+    return (
+      $0
+    );
+  }
+}
+Component.displayName = "${1:Name}";
+
 Component.propTypes = {
 };
 
 Component.defaultProps = {
 };
 
+export default connectToStores(Component);
 export { Component };
 endsnippet
 
-snippet chai "chai" b
+snippet Store "Alt Store" b
+import alt from "dispatcher";
+import Actions from "actions/$2";
+
+class Store {
+  constructor() {
+    this.bindActions(Actions);
+    this.state = {
+      $0
+    };
+  }
+}
+
+export default alt.createStore(Store, "$1Store");
+export { Store };
+endsnippet
+
+snippet Actions "Alt Actions" b
+import alt from "dispatcher";
+
+class Actions {
+  constructor() {
+    this.generateActions(
+      $0
+    );
+  }
+}
+
+export default alt.createActions(Actions);
+endsnippet
+
+snippet ComponentTest "Test Component" b
 import R from "ramda";
 import React from "react";
 import { shallow } from "enzyme";
-import { TestScheduler, ReactiveTest } from "rx";
+import rewire from "test-utils/rewire";
+
+import $1 from "components/$2`!p snip.rv = re.sub('((?<!^)[A-Z])', r'-\1', t[1]).lower()`";
+
+import chaiEnzyme from "chai-enzyme";
+chai.use(chaiEnzyme());
+
+describe("$1", () => {
+  let subject;
+  let props;
+  let rewireSandbox;
+
+  beforeEach(() => {
+    props = {};
+    rewireSandbox = rewire($1);
+    rewireSandbox.stub({
+      styles: {
+      }
+    });
+    subject = R.memoize(() => shallow(<$1 { ...props }/>));
+  });
+
+  afterEach(() => {
+    rewireSandbox.restore();
+  });
+
+  $0
+});
+endsnippet
+
+snippet ComponentAltTest "Test Component" b
+import R from "ramda";
+import React from "react";
+import { shallow } from "enzyme";
 import rewire from "utils/rewire";
 
 import { Component, __RewireAPI__ } from "$1";
@@ -117,66 +218,222 @@ import { Component, __RewireAPI__ } from "$1";
 import chaiEnzyme from "chai-enzyme";
 chai.use(chaiEnzyme());
 
-const { onNext, onError, onCompleted } = ReactiveTest;
-
 describe("$2", () => {
   let subject;
   let props;
   let reactContext;
   let rewireSandbox;
-  let actions;
-  let store;
-  let scheduler;
-  let http;
+  let Actions;
+  let Store;
 
   beforeEach(() => {
     props = {};
     reactContext = {};
-
-    scheduler = new TestScheduler();
-    http = { put: sinon.stub() };
-
-    http.put.returns(scheduler.createColdObservable(
-      onNext(100, { response: {}}),
-      onCompleted(100)
-    ));
 
     subject = R.memoize(() => shallow(
       <Component { ...props }/>,
       { context: reactContext }
     ));
 
-    store = {
+    Store = {
       getState: sinon.stub().returns("state")
     };
 
-    actions = {
-      updateProfile: sinon.stub(),
-      saveProfile: sinon.stub()
+    Actions = {
+      $3: sinon.stub()
     };
 
     rewireSandbox = rewire(__RewireAPI__);
     rewireSandbox.stub({
-      Store: store,
-      Actions: actions
+      Store,
+      Actions
     });
   });
 
   afterEach(() => {
-    scheduler.stop();
     rewireSandbox.restore();
   });
 
   it("connects to Store", () => {
-    expect(Component.getStores()).to.include(store);
+    expect(Component.getStores()).to.include(Store);
   });
 
   it("gets props from Store state", () => {
     expect(Component.getPropsFromStores()).to.equal("state");
   });
-  it("renders without errors", () => {
-    expect(subject()).to.be.present();
-  });
 
   $0
+});
+endsnippet
+
+snippet StoreTest "Alt Store Test" b
+import alt from "dispatcher";
+import testableStore from "utils/test/testable-store";
+import rewire from "utils/rewire";
+
+import { Store, __RewireAPI__ } from "stores/$1";
+
+describe("$1", () => {
+  let store;
+  let subject;
+  let rewireSandbox;
+
+  beforeEach(() => {
+    rewireSandbox = rewire(__RewireAPI__);
+    store = testableStore(alt, Store);
+  });
+
+  afterEach(() => {
+    rewireSandbox.restore();
+  });
+});
+endsnippet
+
+snippet itrenders "it renders" b
+it("renders $1", () => {
+  expect(
+    subject().find("$2")$3
+  ).to.be.${4:present()};
+});
+endsnippet
+
+snippet expfind "expect find" b
+expect(
+  subject()
+    .find("$1")
+    .filter({ $2 })
+).to.be.present();
+endsnippet
+
+# react native
+snippet styles "stylesheet" b
+const styles = StyleSheet.create({
+  $1
+});
+endsnippet
+
+snippet reducer "reducer" b
+const ${1:reducer} = (state = {
+  $2
+}, action) => {
+  switch (action.type) {
+    case '$3':
+      $4
+    default:
+      return state;
+  }
+}
+endsnippet
+
+snippet 'const (\w+)' "action types" r
+const `!p snip.rv = match.group(1).upper()` = "${1:`!p snip.rv = match.group(1).upper()`}";$0
+endsnippet
+
+snippet slc "stateless component" b
+import React, { PropTypes } from "react";
+
+const ${1:Component} = (props) => (
+  $2
+);
+
+$1.displayName = "$1";
+
+$1.propTypes = {
+  $3
+};
+
+export default $1;
+endsnippet
+
+snippet .do "rx do" b
+.do((e) => { console.log("$0"); })
+endsnippet
+
+snippet iee "chai it expect equal" b
+it("$1", () => {
+  expect($2).to.equal(${3:true});
+});
+endsnippet
+
+snippet ee "chai expect equal" b
+expect($1).to.equal(${2:true});
+endsnippet
+
+snippet ede "chai expect equal" b
+expect($1).to.eql(${2:true});
+endsnippet
+
+snippet descs "describe store.onX" b
+describe("$1", () => {
+  beforeEach(() => {
+    subject = () => store.$1($2);
+  });
+});
+endsnippet
+
+snippet const "const" b
+const { $1 } = ${2:this.props};
+endsnippet
+
+snippet story "story" b
+import React from "react";
+import { storiesOf, action } from "@kadira/storybook";
+import { WithNotes } from "@kadira/storybook-addon-notes";
+import $1
+
+storiesOf("$2", module)
+  .addWithInfo(
+    "$3",
+    "$4",
+    () => $5
+  );
+endsnippet
+
+snippet action "redux action" b
+export function $1Action(data) {
+  return {
+    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`",
+  data
+  };
+}
+endsnippet
+
+snippet actions "redux ajax actions" b
+export function $1Action(data) {
+  return {
+    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`",
+  data
+  };
+}
+
+export function $1FailureAction(data) {
+  return {
+    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_FAILURE",
+  data
+  };
+}
+
+export function $1SuccessAction(data) {
+  return {
+    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_SUCCESS",
+  data
+  };
+}
+endsnippet
+
+snippet epic "redux epic" b
+export function $1Epic(action$) {
+  return action$.ofType("`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`")
+    .mergeMap((${2:actionData}) => $3)
+}
+endsnippet
+
+snippet itres "reducer it" b
+it("responds to the $1 action", () => {
+  const currentState = deepFreeze({$3});
+  const newState = currentBrandReducer(currentState, {
+    type: "$1"$2
+  });
+  expect(newState).to.eql({$4});
+});
 endsnippet

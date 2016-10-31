@@ -64,6 +64,12 @@ snippet 'desc|cont|it' "rspec do" r
 end$0
 endsnippet
 
+snippet debug "debug" b
+Rails.logger.debug "*"*20
+Rails.logger.debug $1
+Rails.logger.debug "*"*20
+endsnippet
+
 
 # Rspec
 snippet al "allow receive" b
