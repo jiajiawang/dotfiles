@@ -10,8 +10,9 @@ if [[ "$SHLVL" -eq 1 && ! -o LOGIN && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
 fi
 
 # use vim as the visual editor
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR=$VISUAL
+export TERM="xterm-256color"
 
 # ensure dotfiles bin directory is loaded first
 # if [[ -z $TMUX ]]; then
@@ -30,4 +31,8 @@ fi
 source ~/.zalias
 
 # set go path
-export GOPATH=~/Workspace/go
+export GOPATH=~/workspace/go
+export PATH=$PATH:$GOPATH/bin
+
+# docker
+# eval $(docker-machine env default)

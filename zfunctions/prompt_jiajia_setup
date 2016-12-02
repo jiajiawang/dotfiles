@@ -29,9 +29,9 @@ function prompt_jiajia_setup {
 
   # Set editor-info parameters.
   zstyle ':prezto:module:editor:info:completing' format '%F{green}...%f'
-  zstyle ':prezto:module:editor:info:keymap:primary' format ' %B%F{1}❯%F{3}❯%F{2}❯%f%b'
+  zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}❯%F{3}❯%F{2}❯%f%b'
   zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format ' %F{3}♺%f'
-  zstyle ':prezto:module:editor:info:keymap:alternate' format ' %B%F{2}❮%F{3}❮%F{1}❮%f%b'
+  zstyle ':prezto:module:editor:info:keymap:alternate' format ' %F{2}❮%F{3}❮%F{1}❮%f%b'
 
   # Set ruby-info parameters.
   zstyle ':prezto:module:ruby:info:version' format '%F{red}rb-%v%f'
@@ -52,9 +52,9 @@ function prompt_jiajia_setup {
 
   # Define prompts.
   PROMPT='%(?..%F{red}%B-> [%?]%b%f
-)%F{green}%B${_prompt_jiajia_pwd}%b%f${vcs_info_msg_0_}
+)%F{blue}${_prompt_jiajia_pwd}%b%f${vcs_info_msg_0_}
 ${editor_info[keymap]} '
-  RPROMPT='%F{yellow}%D{%H:%M:%S}%f ${ruby_info[version]}'
+  RPROMPT='%F{yellow}%D{%H:%M:%S}%f'
   SPROMPT='zsh: correct %F{magenta}%R%f to %F{green}%r%f [nyae]? '
 }
 
