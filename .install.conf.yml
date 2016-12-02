@@ -18,5 +18,5 @@
     ~/.reek: reek
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
+  - [git submodule update --init --recursive --remote, Installing submodules]
   - [git submodule foreach git pull origin master, Updating submodules]
