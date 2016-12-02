@@ -5,10 +5,8 @@ set nocompatible               " be iMproved
 call plug#begin('~/.vim/plugged')
 
 " General Plugins
-Plug 'Raimondi/delimitMate'
-  let delimitMate_expand_space=1
-  let delimitMate_expand_cr=1
-  imap <C-B> <Plug>delimitMateS-Tab
+Plug 'jiangmiao/auto-pairs'
+  let g:AutoPairsFlyMode = 1
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
@@ -18,6 +16,8 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
 Plug 'Lokaltog/vim-easymotion'
+  let g:EasyMotion_smartcase = 1
+  nmap s <Plug>(easymotion-overwin-f)
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
@@ -26,27 +26,51 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsListSnippets="<C-f>"
 Plug 'scrooloose/nerdcommenter'
   let g:NERDSpaceDelims=1
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-  nnoremap <C-n> :NERDTreeToggle<cr>
-Plug 'neomake/neomake', { 'on': 'Neomake' }
+Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
+  nnoremap <M-j> :NERDTreeToggle<cr>
+  nnoremap <M-k> :NERDTreeFind<cr>
+Plug 'neomake/neomake'
+  " let g:neomake_verbose = 3
   let g:neomake_open_list = 1
-  let g:neomake_scss_enabled_makers = ['scsslint']
+  let g:neomake_scss_enabled_makers = ['scsslint', 'stylelint']
   let g:neomake_scss_scsslint_maker = {
     \ 'exe': 'scss-lint',
-    \ 'errorformat': '%f:%l [%t] %m'
+    \ 'args': ['-c', '.scss-style.yml'],
+    \ 'errorformat': '%f:%l:%c [%t] %m'
+  \ }
+  let g:neomake_scss_stylelint_maker = {
+    \ 'exe': 'stylelint',
+    \ 'args': ['--no-color'],
+    \ 'errorformat':
+               \ '%+P%f,' .
+               \ '%*\s%l:%c  %t  %m,' .
+               \ '%-Q'
+  \ }
+  let g:neomake_ruby_fasterer_maker = {
+    \ 'exe': 'fasterer',
+    \ 'errorformat': '%m Occurred at lines: %l.'
   \ }
   let g:neomake_javascript_enabled_makers = ['eslint']
-  let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek']
-  let g:neomake_rails_enabled_makers = ['mri', 'rubocop', 'reek']
-  let g:neomake_error_sign = {'text': '⛔️', 'texthl': 'NeomakeErrorSign'}
-  let g:neomake_warning_sign = {'text': '⚠️', 'texthl': 'NeomakeWarningSign'}
+  let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek', 'fasterer']
+  let g:neomake_rails_enabled_makers = ['mri', 'rubocop', 'reek', 'fasterer']
+  let g:neomake_sh_enabled_makers = ['shellcheck']
+  let g:neomake_error_sign = {'text': '💩', 'texthl': 'NeomakeErrorSign'}
+  let g:neomake_warning_sign = {'text': '😞', 'texthl': 'NekomakeWarningSign'}
   let g:neomake_message_sign = {'text': '👉', 'texthl': 'NeomakeMessageSign'}
-  let g:neomake_info_sign = {'text': 'ℹ️', 'texthl': 'NeomakeInfoSign'}
-Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
+  let g:neomake_info_sign = {'text': '💁', 'texthl': 'NeomakeInfoSign'}
+Plug 'junegunn/limelight.vim'
+  let g:limelight_conceal_ctermfg = 240  " Solarized Base1
+  let g:limelight_conceal_guifg = '#8a8a8a'  " Solarized Base1
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
   let g:fzf_history_dir = '~/.fzf-history'
-  nnoremap <C-p> :GFiles<cr>
+  let g:fzf_files_options =
+    \ '--preview "(pygmentize {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+  nnoremap <C-p> :Files<cr>
   nnoremap <C-b> :Buffers<cr>
-  nnoremap <C-g> :Ag<cr>
+  nnoremap <C-g> :BLines<cr>
+  nnoremap <A-l> :Ag<cr>
+  nmap <C-s> :let @"=expand("%:t:r")<cr><C-p><Esc>pi
+  nmap <C-f> :let @"=expand("<cfile>")<cr><C-p><Esc>pi
   nmap <leader><tab> <plug>(fzf-maps-n)
   xmap <leader><tab> <plug>(fzf-maps-x)
   omap <leader><tab> <plug>(fzf-maps-o)
@@ -55,16 +79,19 @@ Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
   " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   " imap <c-x><c-l> <plug>(fzf-complete-line)
 Plug 'kassio/neoterm'
+  let g:neoterm_size="120"
+  let g:neoterm_position="vertical"
   let g:neoterm_rspec_lib_cmd = 'bin/rspec'
+  let g:neoterm_cucumber_lib_cmd = 'bin/cucumber'
   " let g:neoterm_run_tests_bg = 1
   nnoremap <silent> ,,, :Ttoggle<cr>
   nnoremap <silent> ,rt :call neoterm#test#run('all')<cr>
   nnoremap <silent> ,rf :call neoterm#test#run('file')<cr>
   nnoremap <silent> ,rn :call neoterm#test#run('current')<cr>
   nnoremap <silent> ,rr :call neoterm#test#rerun()<cr>
-  set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
-  set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
-  set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
+  " set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
+  " set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
+  " set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
 Plug 'eugen0329/vim-esearch'
   let g:esearch = {
     \ 'adapter':    'ag',
@@ -79,6 +106,7 @@ Plug 'nathanaelkane/vim-indent-guides'
   " let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
 Plug 'altercation/vim-colors-solarized'
+Plug 'iCyMind/NeoSolarized'
 Plug 'mattn/emmet-vim'
   let g:user_emmet_settings = {
   \  'indentation' : '  ',
@@ -89,6 +117,7 @@ Plug 'mattn/emmet-vim'
 " Plug 'airblade/vim-gitgutter'
 Plug 'sjl/gundo.vim'
   nnoremap <F5> :GundoToggle<CR>
+Plug 'terryma/vim-multiple-cursors'
 
 " Plug 'edkolev/tmuxline.vim'
   " let g:tmuxline_powerline_separators=2
@@ -120,17 +149,18 @@ Plug 'sjl/vitality.vim'
   let g:vitality_always_assume_iterm = 1
 Plug 'vim-scripts/closetag.vim'
 Plug 'alvan/vim-closetag'
+Plug 'roxma/vim-tmux-clipboard'
 Plug 'christoomey/vim-tmux-navigator'
   " let g:tmux_navigator_save_on_switch=1
 Plug 'rizzatti/dash.vim'
-  nmap <silent> <leader>d <Plug>DashSearch
+  nmap <silent> <leader>ds <Plug>DashSearch
 
 " Javascript Plugins
 Plug 'pangloss/vim-javascript'
 Plug 'othree/yajs.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
   let g:used_javascript_libs='jquery,angularjs,react,flux,chai'
-Plug 'moll/vim-node'
+" Plug 'moll/vim-node'
 " Plug 'jelera/vim-javascript-syntax'
 Plug 'myhere/vim-nodejs-complete'
   let g:nodejs_complete_config = {'js_compl_fn': 'javascriptcomplete#CompleteJS','max_node_compl_len': 15}
@@ -170,7 +200,14 @@ Plug 'rainerborene/vim-reek'
   let g:reek_on_loading = 0
 
 " go Plugins
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'for': 'go' }
+  let g:go_auto_sameids = 1
+  let g:go_highlight_functions = 1
+  let g:go_highlight_methods = 1
+  let g:go_highlight_types = 1
+  let g:go_highlight_fields = 1
+  let g:go_highlight_build_constraints = 1
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 " C# Plugins
 " Plug 'OmniSharp/omnisharp-vim'
@@ -183,18 +220,33 @@ Plug 'fatih/vim-go'
   " let g:easytags_auto_highlight = 0
   " let g:easytags_dynamic_files = 1
 
-"Plugins requires additional sources or installation steps
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
-  let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-  let g:ycm_complete_in_strings=1
-  let g:ycm_collect_identifiers_from_tags_files=1
-  let g:ycm_seed_identifiers_with_syntax=1
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  let g:deoplete#enable_at_startup = 1
+  " deoplete tab-complete
+  if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+  endif
+  inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+  inoremap <expr><S-tab> pumvisible() ? "\<c-p>" : "\<tab>"
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+  " let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+  " let g:ycm_complete_in_strings=1
+  " let g:ycm_collect_identifiers_from_tags_files=1
+  " let g:ycm_seed_identifiers_with_syntax=1
 " Plug 'majutsushi/tagbar'
   " nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
   " if you want javascript support, you'll also need jsctags (https://github.com/mozilla/doctorjs)
   " article http://discontinuously.com/2011/03/vim-support-javascript-taglist-plus/
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install -g' }
+  let g:tern_show_argument_hints = 'on_hold'
+  let g:tern_request_timeout = 1
+  let g:tern_show_signature_in_pum = 1
+  let g:tern#command = ["tern"]
+  let g:tern#arguments = ["--persistent"]
+Plug 'carlitux/deoplete-ternjs'
+" Plug 'wellle/tmux-complete.vim'
+  " let g:tmuxcomplete#trigger = 'completefunc'
 
 call plug#end()
 
@@ -203,11 +255,15 @@ filetype plugin indent on     " required!
 " Turn on syntax highlighting
 syn on
 " color scheme
-set t_Co=256
+" set t_Co=256
+set termguicolors
 set background=dark
-color solarized
+color NeoSolarized
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
+
+" Disable mouse
+set mouse=""
 
 " font
 set guifont=Ubuntu\ Mono:h11
@@ -233,7 +289,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=2
 set expandtab
-set lcs=tab:->
+" set lcs=tab:->
 set list
 
 set textwidth=80
@@ -249,7 +305,7 @@ set tags+=./tags;
 set complete+=k,]
 set completeopt-=preview
 set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
-set selection=exclusive
+" set selection=exclusive
 
 set previewheight=20
 set splitbelow
@@ -262,9 +318,26 @@ set foldlevelstart=2
 let g:formatdef_fmt_custom_xml = '"tidy -xml -q --show-errors 0 --show-warnings 0 --indent-attributes 1"'
 let g:formatters_xml = ['fmt_custom_xml']
 
+augroup gofile
+  autocmd!
+  autocmd FileType go setlocal shiftwidth=4 noexpandtab
+  autocmd FileType go nmap <Leader>gr <Plug>(go-run)
+  autocmd FileType go nmap <Leader>gt <Plug>(go-test)
+  autocmd FileType go nmap <Leader>gi <Plug>(go-info)
+augroup END
+
+aug neomaker
+  au!
+  au BufWritePost * Neomake
+  au BufRead,BufNewFile,BufEnter *test.jsx,*test.js let b:neomake_javascript_enabled_makers=[]
+aug END
+
 augroup startgroup
   autocmd!
-  autocmd! BufWritePost * Neomake
+  autocmd VimEnter * command! -nargs=? -complete=file AllFiles :call fzf#vim#files(<q-args>, { 'source': 'ag --hidden -U -g ""' })
+  " autocmd VimEnter * command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '', {'options': "--preview 'pygmentize $(cut -d: -f1 <<< {}) 2> /dev/null | head -$(($(cut -d: -f2 <<< {}) + 10)) | tail -n 21'"})
+  autocmd VimEnter * command! -nargs=* -complete=file Commits :call fzf#vim#commits(fzf#wrap('commits',
+    \ {'options': '--preview "echo {} | grep -o ''[a-f0-9]\{7\}'' | head -1 | xargs -I % sh -c ''git log -1 --stat --color=always %''"'}))
   "
   " autocmd FileType perl,html,css,xml setlocal shiftwidth=4
   autocmd FileType php,c setlocal shiftwidth=4
@@ -272,7 +345,8 @@ augroup startgroup
   "omnifunc
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  " autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType javascript setlocal omnifunc=tern#Complete
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -298,13 +372,13 @@ augroup startgroup
   autocmd BufEnter * highlight OverLengthOrExtraWhiteSpace ctermbg=cyan guibg=cyan
   " autocmd BufEnter * match OverLength /\%81v./
   " autocmd BufEnter * match ExtraWhiteSpace /\s\+\%#\@<!$/
-  autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
+  " autocmd BufEnter * match OverLengthOrExtraWhiteSpace /\%81v.\|\s\+\%#\@<!$/
   autocmd BufEnter *.js match OverLengthOrExtraWhiteSpace /\%121v.\|\s\+\%#\@<!$/
 
   autocmd FileType ruby let b:surround_45 = "do\n\r\nend"
   autocmd FileType php let b:surround_63 = "<?php \r ?>"
 
-  autocmd BufReadPost fugitive://* set bufhidden=delete
+  " autocmd BufReadPost fugitive://* set bufhidden=delete
   " Don't screw up folds when inserting text that might affect them, until
   " leaving insert mode. Foldmethod is local to the window. Protect against
   " screwing up folding when switching between windows.
@@ -325,10 +399,10 @@ aug neoterm_test_rspec
         \ endif
 aug END
 
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --vimgrep\ --nogroup\ --nocolor
-endif
+" if executable('ag')
+  " " Use Ag over Grep
+  " set grepprg=ag\ --vimgrep\ --nogroup\ --nocolor
+" endif
 
 set pastetoggle=<F3>
 let g:html_indent_tags = 'li\|p'
@@ -340,8 +414,44 @@ let mapleader=","
 map === mmgg=G`m^zz
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
 
-" Fast saving
+" Fast saving/quit
 nmap <leader>ww :w<cr>
+nmap <leader>wa :wa<cr>
+nmap <leader>qq :q<cr>
+nmap <leader>wq :wq<cr>
+
+nmap <leader>,r f,a<cr><Esc>
+nmap <leader>,l tahr<cr>w
+nmap <leader>,n tthr<cr>w
+vmap <leader>ml ygvs<cr><C-R><S-"><ESC>
+call textobj#user#plugin('context', {
+\   'code': {
+\     'pattern': 'context(.*)',
+\     'select': ['ic', 'ac']
+\   },
+\ })
+call textobj#user#plugin('attribute', {
+\   'code': {
+\     'pattern': '[a-zA-Z-]\+=\({[^=]*}\|"[^=]*"\)',
+\     'select': ['iT', 'aT'],
+\     'move-n': 'ta',
+\     'move-p': 'tA',
+\   },
+\ })
+call textobj#user#plugin('keyvalue', {
+\   'code': {
+\     'pattern': '\w\+: [^:]*\(,\|\>\)',
+\     'move-n': 'tt',
+\     'move-p': 'tT',
+\   },
+\ })
+" call textobj#user#plugin('attributes', {
+" \   'code': {
+" \     'pattern': ['<\w\+\s', '/\?>'],
+" \     'select-a': 'aa',
+" \     'select-i': 'ia',
+" \   },
+" \ })
 
 " Fast lnext, lprev
 nmap <leader>lf :lfirst<cr>
@@ -359,6 +469,9 @@ nmap N Nzz
 
 " Beatify json file
 nmap <leader>bfj :%!python -m json.tool<cr>
+
+" Duplicate paragraph
+nmap <leader>dp v$%<S-Y><S-P>
 
 " Map ESC
 imap jj <ESC>
@@ -386,7 +499,7 @@ vnoremap <S-Tab> <gv
 
 " Use Space to scroll page
 nnoremap <Space> 15<C-E>
-nnoremap <S-Space> 15<C-Y>
+nnoremap <C-Space> 15<C-Y>
 
 nmap <leader>ss vii:sort<cr>
 
@@ -416,3 +529,4 @@ vnoremap <silent> & :<C-U>
   \:cw<CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+tnoremap <Esc> <C-\><C-n>
