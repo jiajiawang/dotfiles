@@ -1,0 +1,74 @@
+global !p
+from snippets_helpers import *
+endglobal
+
+snippet c "React Component" b
+import React, { PropTypes } from "react";
+import styles from "$2`!p snip.rv = to_kebab_case(t[1])`.scss";
+
+class ${1:Component} extends React.Component {
+  componentDidMount() {
+
+  }
+
+  render() {
+    return (
+      $0
+    );
+  }
+}
+
+$1.displayName = "$1";
+
+$1.propTypes = {
+};
+
+$1.defaultProps = {
+};
+
+export default $1;
+endsnippet
+
+snippet fc "function component" b
+import React, { PropTypes } from "react";
+import styles from "$2`!p snip.rv = to_kebab_case(t[1])`.scss";
+
+const ${1:Component} = (props) => (
+  $3
+);
+
+$1.displayName = "$1";
+
+$1.propTypes = {
+  $4
+};
+
+export default $1;
+endsnippet
+
+snippet styles "div styles" b
+<div className={ styles$1 }>
+  $0
+</div>
+endsnippet
+
+snippet ctest "Component test" b
+import R from "ramda";
+import React from "react";
+import { shallow } from "enzyme";
+
+import $1 from "components/$2`!p snip.rv=to_kebab_case(t[1])`";
+
+describe("$1", () => {
+  let subject;
+  let props;
+
+  beforeEach(() => {
+    props = {
+    };
+    subject = R.memoize(() => shallow(<$1 { ...props } />));
+  });
+
+  $0
+});
+endsnippet

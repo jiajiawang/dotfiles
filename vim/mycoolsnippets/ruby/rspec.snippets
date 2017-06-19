@@ -1,0 +1,11 @@
+snippet iiexpf "expected to be falsy" b
+it { is_expected.to be_falsy }
+endsnippet
+
+snippet iiexpt "expected to be truthy" b
+it { is_expected.to be_truthy }
+endsnippet
+
+snippet allow "allow to" b
+allow($1).to receive(:$2)${3:.with($4)}.and_return(${5:true})
+endsnippet

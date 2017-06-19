@@ -1,0 +1,51 @@
+snippet mock "jest mock" b
+jest.mock("$1");
+endsnippet
+
+snippet mocko "jest mock object" b
+jest.mock("$1", () => ({$2}));
+endsnippet
+
+snippet mockf "jest mock fn" b
+jest.mock("$1", () => jest.fn());
+endsnippet
+
+snippet expbp "expect().toBePresent" b
+expect(
+  subject().find("$1")
+).toBePresent();
+endsnippet
+
+snippet expbe "expect().toBeEmpty" b
+expect(
+  subject().find("$1")
+).toBeEmpty();
+endsnippet
+
+snippet exphc "expect().toHaveClassName" b
+expect(
+  subject().find("$1")
+).toHaveClassName("$2");
+endsnippet
+
+snippet exphp "expect().toHaveProp" b
+expect(
+  subject().find("$1")
+).toHaveProp("$2", $3);
+endsnippet
+
+snippet expht "expect().toHaveText" b
+expect(
+  subject().find("$1")
+).toHaveText("$2");
+endsnippet
+
+snippet expms "expect(subject()).toMatchSnapshot" b
+expect(subject()).toMatchSnapshot();
+endsnippet
+
+snippet expfms "expect(subject().find()).toMatchSnapshot" b
+expect(
+  subject().find("$1")
+).toMatchSnapshot();
+endsnippet

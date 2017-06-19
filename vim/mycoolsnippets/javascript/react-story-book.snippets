@@ -1,0 +1,17 @@
+global !p
+from snippets_helpers import *
+endglobal
+
+snippet story "story" b
+import React from "react";
+import { storiesOf, action } from "@kadira/storybook";
+import { WithNotes } from "@kadira/storybook-addon-notes";
+import ${2:`!p snip.rv = to_camel_case(t[1])`} from "components/widgets/$1";
+
+storiesOf("$2", module)
+  .addWithInfo("$3", $4() => (
+    $5
+  ))
+;
+endsnippet
+

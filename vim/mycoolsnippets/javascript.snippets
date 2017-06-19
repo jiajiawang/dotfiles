@@ -1,11 +1,15 @@
+global !p
+from snippets_helpers import *
+endglobal
+
 snippet re "require" b
 var ${1:http} = require('${2:$1}');$0
 endsnippet
 
 snippet it "Mocha it" b
 it("$1", () => {
-  $0
-});
+  $2
+});$0
 endsnippet
 
 snippet desc "Mocha describe" b
@@ -27,7 +31,7 @@ context("$1", () => {
   beforeEach(() => {
     $2
   });
-  $0
+  ${0:${VISUAL}}
 });
 endsnippet
 
@@ -82,28 +86,6 @@ endsnippet
 
 
 # React
-
-snippet Component "React Component" b
-import React, { PropTypes } from "react";
-
-class ${1:Component} extends React.Component {
-  render() {
-    return (
-      $2
-    );
-  }
-}
-
-$1.displayName = "$1";
-
-$1.propTypes = {
-};
-
-$1.defaultProps = {
-};
-
-export default $1;
-endsnippet
 
 snippet ComponentAlt "Alt Component" b
 import React from "react";
@@ -306,43 +288,14 @@ expect(
 endsnippet
 
 # react native
-snippet styles "stylesheet" b
+snippet ss "stylesheet" b
 const styles = StyleSheet.create({
   $1
 });
 endsnippet
 
-snippet reducer "reducer" b
-const ${1:reducer} = (state = {
-  $2
-}, action) => {
-  switch (action.type) {
-    case '$3':
-      $4
-    default:
-      return state;
-  }
-}
-endsnippet
-
 snippet 'const (\w+)' "action types" r
 const `!p snip.rv = match.group(1).upper()` = "${1:`!p snip.rv = match.group(1).upper()`}";$0
-endsnippet
-
-snippet slc "stateless component" b
-import React, { PropTypes } from "react";
-
-const ${1:Component} = (props) => (
-  $2
-);
-
-$1.displayName = "$1";
-
-$1.propTypes = {
-  $3
-};
-
-export default $1;
 endsnippet
 
 snippet .do "rx do" b
@@ -373,59 +326,6 @@ endsnippet
 
 snippet const "const" b
 const { $1 } = ${2:this.props};
-endsnippet
-
-snippet story "story" b
-import React from "react";
-import { storiesOf, action } from "@kadira/storybook";
-import { WithNotes } from "@kadira/storybook-addon-notes";
-import $1
-
-storiesOf("$2", module)
-  .addWithInfo(
-    "$3",
-    "$4",
-    () => $5
-  );
-endsnippet
-
-snippet action "redux action" b
-export function $1Action(data) {
-  return {
-    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`",
-    data
-  };
-}
-endsnippet
-
-snippet actions "redux ajax actions" b
-export function $1Action(data) {
-  return {
-    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`",
-  data
-  };
-}
-
-export function $1FailureAction(data) {
-  return {
-    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_FAILURE",
-  data
-  };
-}
-
-export function $1SuccessAction(data) {
-  return {
-    type: "`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_SUCCESS",
-  data
-  };
-}
-endsnippet
-
-snippet epic "redux epic" b
-export function $1Epic(action$) {
-  return action$.ofType("`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`")
-    .mergeMap((${2:actionData}) => $3)
-}
 endsnippet
 
 snippet itres "reducer it" b

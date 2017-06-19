@@ -1,0 +1,241 @@
+global !p
+from snippets_helpers import *
+endglobal
+
+snippet reducer "reducer" b
+const ${1:reducer} = (state = {
+  $2
+}, action) => {
+  switch (action.type) {
+    case '$3':
+      $4
+    default:
+      return state;
+  }
+}
+endsnippet
+
+snippet epic "redux epic" b
+export function $1Epic(action$) {
+  return action$.ofType("`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`")
+    .mergeMap((${2:actionData}) => $3)
+}
+endsnippet
+
+snippet at "action type" b
+export const `!p snip.rv = to_upper_case(t[2])` = "$1/$2";
+endsnippet
+
+snippet ats "action types" b
+export const `!p snip.rv = to_upper_case(t[2])` = "$1/$2";
+export const `!p snip.rv = to_upper_case(t[2])`_FAILURE = "$1/$2-failure";
+export const `!p snip.rv = to_upper_case(t[2])`_SUCCESS = "$1/$2-success";
+endsnippet
+
+snippet action "redux action" b
+export function $1Action(data) {
+  return {
+    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`,
+    data
+  };
+}
+endsnippet
+
+snippet actions "redux ajax actions" b
+export function $1Action(data) {
+  return {
+    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`,
+    data
+  };
+}
+
+export function $1FailureAction(data) {
+  return {
+    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_FAILURE,
+    data
+  };
+}
+
+export function $1SuccessAction(data) {
+  return {
+    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_SUCCESS,
+    data
+  };
+}
+endsnippet
+
+snippet reducertest "reducer test" b
+import deepFreeze from "deep-freeze";
+import reducer from "$1";
+
+describe("$2", () => {
+  let currentState;
+  let subject;
+  let actionType;
+  let actionData;
+
+  beforeEach(() => {
+    currentState = {};
+    subject = () => reducer(deepFreeze(currentState), {
+      type: actionType,
+      data: actionData
+    });
+  });
+
+  it("has default state", () => {
+    expect(
+      reducer(undefined, {})
+    ).toEqual({
+      $3
+    });
+  });
+
+  describe("$4", () => {
+    beforeEach(() => {
+      actionType = "$4";
+      actionData = {
+        $5
+      };
+    });
+
+    it("$6", () => {
+      currentState = {$7};
+      actionData = {$8};
+      expect(
+        subject()
+      ).toEqual($9);
+    });
+  });
+});
+endsnippet
+
+snippet epictest "epic test" b
+import { ActionsObservable } from "redux-observable";
+import { TestScheduler } from "rxjs";
+import observerDeepEqualAssert from "test-utils/observer-deep-equal-assert";
+import {
+  fetchRetailerDetailsEpic,
+  createSubmissionEpic,
+} from "epics/submission-epic";
+import retailerApi from "api/retailer";
+import submissionApi from "api/submission";
+
+jest.mock("api/retailer", () => ({
+  referralConditions: jest.fn()
+}));
+
+jest.mock("api/submission", () => ({
+  create: jest.fn()
+}));
+
+describe("submission epic", () => {
+  let action$;
+  let subject;
+  let scheduler;
+  let store;
+
+  beforeEach(() => {
+    scheduler = new TestScheduler(observerDeepEqualAssert);
+    store = { getState: jest.fn() };
+  });
+
+  afterEach(() => {
+    scheduler.flush();
+  });
+
+  describe("fetchRetailerDetailsEpic", () => {
+    beforeEach(() => {
+      subject = () => fetchRetailerDetailsEpic(action$);
+
+      action$ = new ActionsObservable(
+        scheduler.createHotObservable("--a--", {
+          a: {
+            type: "FETCH_RETAILER_DETAILS",
+            data: "foo"
+          }
+        })
+      );
+    });
+
+    context("when api call succeeds", () => {
+      beforeEach(() => {
+        retailerApi.referralConditions.mockReturnValue(
+          scheduler.createColdObservable("---(b|)", {
+            b: { id: 1 }
+          })
+        );
+      });
+
+      it("emits FETCH_RETAILER_DETAILS_SUCCESS action", () => {
+        scheduler.expectObservable(subject()).toBe("-----c", {
+          c: {
+            type: "FETCH_RETAILER_DETAILS_SUCCESS",
+            data: { id: 1 }
+          }
+        });
+      });
+    });
+
+    context("when api call fails", () => {
+      beforeEach(() => {
+        retailerApi.referralConditions.mockReturnValue(
+          scheduler.createColdObservable("---(#|)", null, "error")
+        );
+      });
+
+      it("emits no actions", () => {
+        scheduler.expectObservable(subject()).toBe("-");
+      });
+    });
+  });
+
+  describe("createSubmissionEpic", () => {
+    beforeEach(() => {
+      store.getState.mockReturnValue({
+        submission: { retailer: { id: 11 } }
+      });
+      subject = () => createSubmissionEpic(action$, store);
+      action$ = new ActionsObservable(
+        scheduler.createHotObservable("--a--", {
+          a: { type: "CREATE_SUBMISSION" }
+        })
+      );
+    });
+
+    context("when api call succeeds", () => {
+      beforeEach(() => {
+        submissionApi.create.mockReturnValue(
+          scheduler.createColdObservable("---(b|)", {
+            b: {}
+          })
+        );
+      });
+
+      it("emits CREATE_SUBMISSION_SUCCESS action", () => {
+        scheduler.expectObservable(subject()).toBe("-----c", {
+          c: {
+            type: "CREATE_SUBMISSION_SUCCESS"
+          }
+        });
+      });
+    });
+
+    context("when api call fails", () => {
+      beforeEach(() => {
+        submissionApi.create.mockReturnValue(
+          scheduler.createColdObservable("---(#|)", null, "error")
+        );
+      });
+
+      it("emits CREATE_SUBMISSION_FAILURE action", () => {
+        scheduler.expectObservable(subject()).toBe("-----c", {
+          c: {
+            type: "CREATE_SUBMISSION_FAILURE",
+            data: "error"
+          }
+        });
+      });
+    });
+  });
+});
+endsnippet

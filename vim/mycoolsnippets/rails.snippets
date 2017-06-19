@@ -1,3 +1,7 @@
+global !p
+from snippets_helpers import *
+endglobal
+
 snippet p "params[:name]" w
 params[:${1:name}]$0
 endsnippet
@@ -44,4 +48,27 @@ endsnippet
 
 snippet fsl "frozen_string_literal" b
 # frozen_string_literal: true
+endsnippet
+
+snippet paramn "new parameter" b
+parameter $1,
+          name: :$2,
+          in: :$3`!p snip.rv = autocomplete(t[3], ["query", "path"])`,
+          description: "$4",
+          type: :$5`!p snip.rv = autocomplete(t[5], ["integer", "boolean", "string", "object", "array"])`,
+          required: $6`!p snip.rv = bool(t[6])`
+endsnippet
+
+snippet parami "inline parameter" b
+parameter name: :$2,
+          in: :$3`!p snip.rv = autocomplete(t[3], ["query", "path"])`,
+          description: "$4",
+          type: :$5`!p snip.rv = autocomplete(t[5], ["integer", "boolean", "string", "object", "array"])`,
+          required: $6`!p snip.rv = bool(t[6])`
+endsnippet
+
+snippet prop "property" b
+property :$1 do
+  key :type, :$5`!p snip.rv = autocomplete(t[5], ["integer", "boolean", "string", "object", "array"])`
+end$0
 endsnippet
