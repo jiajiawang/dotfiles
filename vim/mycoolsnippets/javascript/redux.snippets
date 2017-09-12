@@ -16,9 +16,9 @@ const ${1:reducer} = (state = {
 endsnippet
 
 snippet epic "redux epic" b
-export function $1Epic(action$) {
-  return action$.ofType("`!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`")
-    .mergeMap((${2:actionData}) => $3)
+export function $1Epic(action$${2:, store}) {
+  return action$.ofType(`!p snip.rv = to_upper_case(t[1])`)
+    .mergeMap(($3) => $4)
 }
 endsnippet
 
@@ -33,25 +33,23 @@ export const `!p snip.rv = to_upper_case(t[2])`_SUCCESS = "$1/$2-success";
 endsnippet
 
 snippet action "redux action" b
+export const `!p snip.rv = to_upper_case(t[1])` = "$2`!p snip.rv = to_kebab_case(t[1])`";
 export function $1Action(data) {
   return {
-    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`,
+    type: `!p snip.rv = to_upper_case(t[1])`,
     data
   };
 }
 endsnippet
 
 snippet actions "redux ajax actions" b
+export const `!p snip.rv = to_upper_case(t[1])` = "$2`!p snip.rv = to_kebab_case(t[1])`";
+export const `!p snip.rv = to_upper_case(t[1])`_SUCCESS = "$2`!p snip.rv = to_kebab_case(t[1])`-success";
+export const `!p snip.rv = to_upper_case(t[1])`_FAILURE = "$2`!p snip.rv = to_kebab_case(t[1])`-failure";
+
 export function $1Action(data) {
   return {
     type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`,
-    data
-  };
-}
-
-export function $1FailureAction(data) {
-  return {
-    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_FAILURE,
     data
   };
 }
@@ -62,6 +60,19 @@ export function $1SuccessAction(data) {
     data
   };
 }
+
+export function $1FailureAction(data) {
+  return {
+    type: `!p snip.rv = re.sub('([A-Z]+)', r'_\1', t[1]).upper()`_FAILURE,
+    data
+  };
+}
+endsnippet
+
+snippet dispatch "dispatchToProps"
+$1($2) {
+  return dispatch(${4:$1}Action(${3:$2}));
+},
 endsnippet
 
 snippet reducertest "reducer test" b

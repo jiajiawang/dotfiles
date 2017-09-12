@@ -10,6 +10,20 @@ snippet mockf "jest mock fn" b
 jest.mock("$1", () => jest.fn());
 endsnippet
 
+snippet sf "subject().find()"
+subject().find("$1")
+endsnippet
+
+snippet expe ".toEqual()"
+expect(subject()).toEqual($1);
+endsnippet
+
+snippet expb ".toBe()"
+expect(
+  subject().find("$1")
+).toBe($2);
+endsnippet
+
 snippet expbp "expect().toBePresent" b
 expect(
   subject().find("$1")
