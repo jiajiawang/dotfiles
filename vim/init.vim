@@ -5,6 +5,10 @@ set nocompatible               " be iMproved
 call plug#begin('~/.vim/plugged')
 
 " General Plugins
+Plug 'jiajiawang/gfmt.nvim', {'do': 'go get github.com/jiajiawang/gfmt.nvim/src/gfmt'}
+Plug 'machakann/vim-highlightedyank'
+  let g:highlightedyank_highlight_duration=2000
+  map y <Plug>(highlightedyank)
 Plug 'jiangmiao/auto-pairs'
   let g:AutoPairsFlyMode = 1
 Plug 'tpope/vim-abolish'
@@ -78,17 +82,21 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
   " imap <c-x><c-f> <plug>(fzf-complete-path)
   " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   " imap <c-x><c-l> <plug>(fzf-complete-line)
+  command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+  command! -bang -nargs=+ -complete=dir Rag call fzf#vim#ag_raw(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+Plug 'janko-m/vim-test'
+  let test#strategy = "neoterm"
+  nnoremap <silent> ,,, :Ttoggle<cr>
+  nnoremap <silent> ,rt :TestSuite<CR>
+  nnoremap <silent> ,rf :TestFile<CR>
+  nnoremap <silent> ,rn :TestNearest<CR>
+  nnoremap <silent> ,rr :TestLast<CR>
 Plug 'kassio/neoterm'
   let g:neoterm_size="120"
   let g:neoterm_position="vertical"
   let g:neoterm_rspec_lib_cmd = 'bin/rspec'
   let g:neoterm_cucumber_lib_cmd = 'bin/cucumber'
   " let g:neoterm_run_tests_bg = 1
-  nnoremap <silent> ,,, :Ttoggle<cr>
-  nnoremap <silent> ,rt :call neoterm#test#run('all')<cr>
-  nnoremap <silent> ,rf :call neoterm#test#run('file')<cr>
-  nnoremap <silent> ,rn :call neoterm#test#run('current')<cr>
-  nnoremap <silent> ,rr :call neoterm#test#rerun()<cr>
   " set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
   " set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
   " set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
@@ -100,8 +108,8 @@ Plug 'eugen0329/vim-esearch'
     \ 'batch_size': 1000,
     \ 'use':        ['visual', 'hlsearch', 'last'],
     \}
-Plug 'matchit.zip'
-Plug 'Align'
+Plug 'vim-scripts/matchit.zip'
+Plug 'vim-scripts/Align'
 Plug 'nathanaelkane/vim-indent-guides'
   " let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
@@ -114,7 +122,7 @@ Plug 'mattn/emmet-vim'
   \    'indentation' : '    ',
   \  }
   \}
-" Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 Plug 'sjl/gundo.vim'
   nnoremap <F5> :GundoToggle<CR>
 Plug 'terryma/vim-multiple-cursors'
@@ -247,6 +255,7 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install -g' }
 Plug 'carlitux/deoplete-ternjs'
 " Plug 'wellle/tmux-complete.vim'
   " let g:tmuxcomplete#trigger = 'completefunc'
+Plug 'sbdchd/neoformat'
 
 call plug#end()
 
@@ -313,6 +322,7 @@ set splitright
 set diffopt+=vertical,iwhite
 set foldlevelstart=2
 
+set inccommand="nosplit"
 " always show tabs in gvim, but not vim
 "set showtabline=2
 let g:formatdef_fmt_custom_xml = '"tidy -xml -q --show-errors 0 --show-warnings 0 --indent-attributes 1"'
