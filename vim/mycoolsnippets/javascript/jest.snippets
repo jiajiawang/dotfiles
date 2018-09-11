@@ -24,16 +24,16 @@ expect(
 ).toBe($2);
 endsnippet
 
-snippet expbp "expect().toBePresent" b
+snippet expbp "expect().toExist" b
 expect(
   subject().find("$1")
-).toBePresent();
+).toExist();
 endsnippet
 
-snippet expbe "expect().toBeEmpty" b
+snippet expbe "expect().not.toExist" b
 expect(
   subject().find("$1")
-).toBeEmpty();
+).not.toExist();
 endsnippet
 
 snippet exphc "expect().toHaveClassName" b
@@ -54,6 +54,14 @@ expect(
 ).toHaveText("$2");
 endsnippet
 
+snippet exphbc "epext().toHaveBeenCalled()"
+expect($1).toHaveBeenCalled()
+endsnippet
+
+snippet exphbcw "epext().toHaveBeenCalledWith()"
+expect($1).toHaveBeenCalledWith($2)
+endsnippet
+
 snippet expms "expect(subject()).toMatchSnapshot" b
 expect(subject()).toMatchSnapshot();
 endsnippet
@@ -62,4 +70,10 @@ snippet expfms "expect(subject().find()).toMatchSnapshot" b
 expect(
   subject().find("$1")
 ).toMatchSnapshot();
+endsnippet
+
+snippet expo "scheduler.expectObservable(subject()).toBe"
+scheduler.expectObservable(subject()).toBe("--$1a", {
+  a: ${2:action()}
+});
 endsnippet

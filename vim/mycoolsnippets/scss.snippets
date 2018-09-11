@@ -1,11 +1,14 @@
 snippet flex "flex" b
-align-content: center;
-align-items: center;
 display: flex;
-flex-flow: row nowrap;
-justify-content: center;
+flex-flow: ${1:row} ${2:nowrap};
 endsnippet
 
 snippet vrb "vertical-rhythm-baseline" w
 $vertical-rhythm-baseline
+endsnippet
+
+snippet above "above mobile" b
+@include above("${1:mobile}") {
+  $0
+}
 endsnippet

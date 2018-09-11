@@ -1,5 +1,13 @@
 ---
+exclude_paths:
+  - db
 IrresponsibleModule:
   enabled: false
 Attribute:
+  enabled: false
+NestedIterators:
+  max_allowed_nesting: 2
+LongParameterList:
+  max_params: 5
+NilCheck:
   enabled: false

@@ -29,9 +29,14 @@ function prompt_jiajia_setup {
 
   # Set editor-info parameters.
   zstyle ':prezto:module:editor:info:completing' format '%F{green}...%f'
-  zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}❯%F{3}❯%F{2}❯%f%b'
+  zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}>%F{3}>%F{2}>%f%b'
+  zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}>%F{3}>%F{2}>%f%b'
   zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format ' %F{3}♺%f'
-  zstyle ':prezto:module:editor:info:keymap:alternate' format ' %F{2}❮%F{3}❮%F{1}❮%f%b'
+  zstyle ':prezto:module:editor:info:keymap:alternate' format ' %F{2}<%F{3}<%F{1}<%f%b'
+  #zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}❯%F{3}❯%F{2}❯%f%b'
+  #zstyle ':prezto:module:editor:info:keymap:primary' format ' %F{1}❯%F{3}❯%F{2}❯%f%b'
+  #zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format ' %F{3}♺%f'
+  #zstyle ':prezto:module:editor:info:keymap:alternate' format ' %F{2}❮%F{3}❮%F{1}❮%f%b'
 
   # Set ruby-info parameters.
   zstyle ':prezto:module:ruby:info:version' format '%F{red}rb-%v%f'

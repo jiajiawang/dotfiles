@@ -1,0 +1,11 @@
+snippet err: "if err"
+if ${1}err := $2; err != nil {
+	${3:return err}
+}
+endsnippet
+
+snippet errw "err wrap"
+if err != nil {
+  return errors.Wrap(err, "$1")
+}
+endsnippet

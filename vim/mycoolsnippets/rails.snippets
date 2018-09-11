@@ -50,6 +50,16 @@ snippet fsl "frozen_string_literal" b
 # frozen_string_literal: true
 endsnippet
 
+snippet paramb "paramb" b
+parameter do
+  key :name, $1
+  key :in, :$2`!p snip.rv = autocomplete(t[2], ["query", "path"])`
+  key :description, "$3"
+  key :type, :$5`!p snip.rv = autocomplete(t[5], ["integer", "boolean", "string", "object", "array"])`
+  key :required, $6`!p snip.rv = bool(t[6])`
+end
+endsnippet
+
 snippet paramn "new parameter" b
 parameter $1,
           name: :$2,

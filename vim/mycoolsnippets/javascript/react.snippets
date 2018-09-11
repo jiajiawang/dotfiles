@@ -3,11 +3,11 @@ from snippets_helpers import *
 endglobal
 
 snippet c "React Component" b
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styles from "$2`!p snip.rv = to_kebab_case(t[1])`.scss";
 
-class ${1:Component} extends PureComponent {
+class ${1:Component} extends React.PureComponent {
   constructor(props) {
     super(props);
   }

@@ -16,9 +16,11 @@ const ${1:reducer} = (state = {
 endsnippet
 
 snippet epic "redux epic" b
-export function $1Epic(action$${2:, store}) {
-  return action$.ofType(`!p snip.rv = to_upper_case(t[1])`)
-    .mergeMap(($3) => $4)
+function $1Epic(action$${2:, state$}$3) {
+  return action$.pipe(
+    ofType(`!p snip.rv = to_upper_case(t[1])`),
+    switchMap(($4) => $5)
+  );
 }
 endsnippet
 
@@ -120,7 +122,7 @@ describe("$2", () => {
 });
 endsnippet
 
-snippet epictest "epic test" b
+snippet epictests "epic tests" b
 import { ActionsObservable } from "redux-observable";
 import { TestScheduler } from "rxjs";
 import observerDeepEqualAssert from "test-utils/observer-deep-equal-assert";
@@ -249,4 +251,57 @@ describe("submission epic", () => {
     });
   });
 });
+endsnippet
+snippet epictest "epic test"
+describe("$1Epic", () => {
+  beforeEach(() => {
+    subject = () => epics.$1Epic(action$, state$);
+    action$ = new ActionsObservable(
+      scheduler.createHotObservable("--a", {
+        a: $1Action($2),
+      })
+    );
+  });
+
+  it("emits `!p snip.rv = to_upper_case(t[1])`_SUCCESS action", () => {
+    scheduler.expectObservable(subject()).toBe("--a", {
+      a: $1Success($3),
+    });
+  });
+});
+endsnippet
+
+snippet epicapi "epic api test"
+context("when api call success", () => {
+  beforeEach(() => {
+    api.${1:get}.mockReturnValue(
+      scheduler.createColdObservable("--(a|)", {
+        a: ${2:""},
+      })
+    );
+  });
+
+  it("emits `!p snip.rv = to_upper_case(t[3])` action", () => {
+    scheduler.expectObservable(subject()).toBe("----a", {
+      a: $3Action($4),
+    });
+  });
+});
+endsnippet
+
+snippet apimock "mock api return value"
+${1:api}.${2:get}.mockReturnValue(
+  scheduler.createColdObservable("--(a|)", {
+    a: ${3:""},
+  })
+);
+endsnippet
+
+snippet apimocke "mock api error"
+${1:api}.${2:get}.mockReturnValue(
+  scheduler.createColdObservable("--(#|)", null, {
+    status: ${3:422},
+	response: ${4:{ errors: $5 }}
+  })
+);
 endsnippet

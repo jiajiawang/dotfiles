@@ -11,6 +11,7 @@ Plug 'machakann/vim-highlightedyank'
   map y <Plug>(highlightedyank)
 Plug 'jiangmiao/auto-pairs'
   let g:AutoPairsFlyMode = 1
+  " let g:AutoPairsMapCR = 0
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
@@ -19,6 +20,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-rhubarb'
 Plug 'Lokaltog/vim-easymotion'
   let g:EasyMotion_smartcase = 1
   nmap s <Plug>(easymotion-overwin-f)
@@ -33,35 +36,25 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
   nnoremap <M-j> :NERDTreeToggle<cr>
   nnoremap <M-k> :NERDTreeFind<cr>
-Plug 'neomake/neomake'
-  " let g:neomake_verbose = 3
-  let g:neomake_open_list = 1
-  let g:neomake_scss_enabled_makers = ['scsslint', 'stylelint']
-  let g:neomake_scss_scsslint_maker = {
-    \ 'exe': 'scss-lint',
-    \ 'args': ['-c', '.scss-style.yml'],
-    \ 'errorformat': '%f:%l:%c [%t] %m'
-  \ }
-  let g:neomake_scss_stylelint_maker = {
-    \ 'exe': 'stylelint',
-    \ 'args': ['--no-color'],
-    \ 'errorformat':
-               \ '%+P%f,' .
-               \ '%*\s%l:%c  %t  %m,' .
-               \ '%-Q'
-  \ }
-  let g:neomake_ruby_fasterer_maker = {
-    \ 'exe': 'fasterer',
-    \ 'errorformat': '%m Occurred at lines: %l.'
-  \ }
-  let g:neomake_javascript_enabled_makers = ['eslint']
-  let g:neomake_ruby_enabled_makers = ['mri', 'rubocop', 'reek', 'fasterer']
-  let g:neomake_rails_enabled_makers = ['mri', 'rubocop', 'reek', 'fasterer']
-  let g:neomake_sh_enabled_makers = ['shellcheck']
-  let g:neomake_error_sign = {'text': '💩', 'texthl': 'NeomakeErrorSign'}
-  let g:neomake_warning_sign = {'text': '😞', 'texthl': 'NekomakeWarningSign'}
-  let g:neomake_message_sign = {'text': '👉', 'texthl': 'NeomakeMessageSign'}
-  let g:neomake_info_sign = {'text': '💁', 'texthl': 'NeomakeInfoSign'}
+Plug 'w0rp/ale'
+  let g:airline#extensions#ale#enabled = 1
+  let g:ale_open_list = 1
+  " let g:ale_sign_error = '💩'
+  " let g:ale_sign_warning = '😵'
+  " let g:ale_sign_info = '😮'
+  let g:ale_lint_on_enter = 0
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_lint_on_insert_leave = 0
+  let g:ale_lint_on_filetype_changed = 0
+  let g:ale_linters = {
+  \   'javascript': ['eslint'],
+  \   'ruby': ['reek', 'rubocop', 'ruby'],
+  \}
+  let g:ale_fixers = {
+  \   'javascript': ['eslint'],
+  \}
+  let g:ale_fix_on_save = 1
+  let g:ale_emit_conflict_warnings = 0
 Plug 'junegunn/limelight.vim'
   let g:limelight_conceal_ctermfg = 240  " Solarized Base1
   let g:limelight_conceal_guifg = '#8a8a8a'  " Solarized Base1
@@ -70,19 +63,20 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
   let g:fzf_files_options =
     \ '--preview "(pygmentize {} || cat {}) 2> /dev/null | head -'.&lines.'"'
   nnoremap <C-p> :Files<cr>
-  nnoremap <C-b> :Buffers<cr>
+  nnoremap ; :Buffers<cr>
   nnoremap <C-g> :BLines<cr>
-  nnoremap <A-l> :Ag<cr>
+  nnoremap <A-l> :MyAg<cr>
   nmap <C-s> :let @"=expand("%:t:r")<cr><C-p><Esc>pi
   nmap <C-f> :let @"=expand("<cfile>")<cr><C-p><Esc>pi
   nmap <leader><tab> <plug>(fzf-maps-n)
   xmap <leader><tab> <plug>(fzf-maps-x)
   omap <leader><tab> <plug>(fzf-maps-o)
+  " imap <leader><tab> <plug>(fzf-maps-i)
   imap <c-x><c-k> <plug>(fzf-complete-word)
   " imap <c-x><c-f> <plug>(fzf-complete-path)
   " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   " imap <c-x><c-l> <plug>(fzf-complete-line)
-  command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+  command! -bang -nargs=* MyAg call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
   command! -bang -nargs=+ -complete=dir Rag call fzf#vim#ag_raw(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 Plug 'janko-m/vim-test'
   let test#strategy = "neoterm"
@@ -93,7 +87,7 @@ Plug 'janko-m/vim-test'
   nnoremap <silent> ,rr :TestLast<CR>
 Plug 'kassio/neoterm'
   let g:neoterm_size="120"
-  let g:neoterm_position="vertical"
+  let g:neoterm_default_mod="vertical"
   let g:neoterm_rspec_lib_cmd = 'bin/rspec'
   let g:neoterm_cucumber_lib_cmd = 'bin/cucumber'
   " let g:neoterm_run_tests_bg = 1
@@ -109,7 +103,9 @@ Plug 'eugen0329/vim-esearch'
     \ 'use':        ['visual', 'hlsearch', 'last'],
     \}
 Plug 'vim-scripts/matchit.zip'
-Plug 'vim-scripts/Align'
+Plug 'junegunn/vim-easy-align'
+  vmap <Enter> <Plug>(EasyAlign)
+  nmap ga <Plug>(EasyAlign)
 Plug 'nathanaelkane/vim-indent-guides'
   " let g:indent_guides_guide_size = 1
   let g:indent_guides_start_level = 2
@@ -126,6 +122,46 @@ Plug 'airblade/vim-gitgutter'
 Plug 'sjl/gundo.vim'
   nnoremap <F5> :GundoToggle<CR>
 Plug 'terryma/vim-multiple-cursors'
+Plug 'AndrewRadev/splitjoin.vim'
+  let g:splitjoin_ruby_curly_braces = 0
+aug javascript
+  autocmd FileType javascript let b:splitjoin_trailing_comma=1
+aug END
+
+" Auto completion
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  " let g:deoplete#enable_at_startup = 1
+  " inoremap <silent><expr> <TAB>
+  " \ pumvisible() ? "\<C-n>" :
+  " \ <SID>check_back_space() ? "\<TAB>" :
+  " \ deoplete#mappings#manual_complete()
+  " function! s:check_back_space() abort "{{{
+  " let col = col('.') - 1
+  " return !col || getline('.')[col - 1]  =~ '\s'
+  " endfunction"}}}
+
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+aug ncm2
+  " enable ncm2 for all buffers
+  autocmd BufEnter * call ncm2#enable_for_buffer()
+aug END
+set completeopt=noinsert,menuone,noselect
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-tmux'
+Plug 'ncm2/ncm2-ultisnips'
+Plug 'ncm2/ncm2-tern'
+Plug 'ncm2/ncm2-tagprefix'
+
+Plug 'autozimu/LanguageClient-neovim', {
+  \ 'branch': 'next',
+  \ 'do': 'bash install.sh',
+  \ }
+" let g:LanguageClient_loggingFile = '/tmp/lc.log'
+" let g:LanguageClient_loggingLevel = 'DEBUG'
 
 " Plug 'edkolev/tmuxline.vim'
   " let g:tmuxline_powerline_separators=2
@@ -138,6 +174,7 @@ Plug 'terryma/vim-multiple-cursors'
       " \'y'    : '%R %b %d',
       " \'z'    : '#H'}
 Plug 'bling/vim-airline'
+  let g:airline#extensions#branch#enabled = 0
   let g:airline#extensions#tabline#enabled=1
   let g:airline#extensions#tabline#buffer_nr_show=1
   if !exists('g:airline_symbols')
@@ -162,6 +199,7 @@ Plug 'christoomey/vim-tmux-navigator'
   " let g:tmux_navigator_save_on_switch=1
 Plug 'rizzatti/dash.vim'
   nmap <silent> <leader>ds <Plug>DashSearch
+Plug 'wellle/targets.vim'
 
 " Javascript Plugins
 Plug 'pangloss/vim-javascript'
@@ -208,14 +246,14 @@ Plug 'rainerborene/vim-reek'
   let g:reek_on_loading = 0
 
 " go Plugins
-Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
   let g:go_auto_sameids = 1
   let g:go_highlight_functions = 1
   let g:go_highlight_methods = 1
   let g:go_highlight_types = 1
   let g:go_highlight_fields = 1
   let g:go_highlight_build_constraints = 1
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 
 " C# Plugins
 " Plug 'OmniSharp/omnisharp-vim'
@@ -228,19 +266,6 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}
   " let g:easytags_auto_highlight = 0
   " let g:easytags_dynamic_files = 1
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  let g:deoplete#enable_at_startup = 1
-  " deoplete tab-complete
-  if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
-  endif
-  inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-  inoremap <expr><S-tab> pumvisible() ? "\<c-p>" : "\<tab>"
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
-  " let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-  " let g:ycm_complete_in_strings=1
-  " let g:ycm_collect_identifiers_from_tags_files=1
-  " let g:ycm_seed_identifiers_with_syntax=1
 " Plug 'majutsushi/tagbar'
   " nnoremap <f2> :TagbarToggle<cr>
   " requirement: exuberant-ctags
@@ -252,10 +277,10 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install -g' }
   let g:tern_show_signature_in_pum = 1
   let g:tern#command = ["tern"]
   let g:tern#arguments = ["--persistent"]
-Plug 'carlitux/deoplete-ternjs'
 " Plug 'wellle/tmux-complete.vim'
   " let g:tmuxcomplete#trigger = 'completefunc'
 Plug 'sbdchd/neoformat'
+  nmap <leader>fo :Neoformat<cr>
 
 call plug#end()
 
@@ -299,7 +324,7 @@ set softtabstop=4
 set shiftwidth=2
 set expandtab
 " set lcs=tab:->
-set list
+" set list
 
 set textwidth=80
 set formatoptions=cq
@@ -312,8 +337,8 @@ set scrolloff=5
 
 set tags+=./tags;
 set complete+=k,]
-set completeopt-=preview
-set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
+" set completeopt-=preview
+" set guicursor=n-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,v-i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 " set selection=exclusive
 
 set previewheight=20
@@ -322,7 +347,9 @@ set splitright
 set diffopt+=vertical,iwhite
 set foldlevelstart=2
 
-set inccommand="nosplit"
+" set shortmess+=c
+
+set inccommand=split
 " always show tabs in gvim, but not vim
 "set showtabline=2
 let g:formatdef_fmt_custom_xml = '"tidy -xml -q --show-errors 0 --show-warnings 0 --indent-attributes 1"'
@@ -330,17 +357,12 @@ let g:formatters_xml = ['fmt_custom_xml']
 
 augroup gofile
   autocmd!
-  autocmd FileType go setlocal shiftwidth=4 noexpandtab
+  autocmd FileType go setlocal shiftwidth=2 tabstop=2 noexpandtab
   autocmd FileType go nmap <Leader>gr <Plug>(go-run)
   autocmd FileType go nmap <Leader>gt <Plug>(go-test)
-  autocmd FileType go nmap <Leader>gi <Plug>(go-info)
+  autocmd FileType go nmap <Leader>gin <Plug>(go-info)
+  autocmd FileType go nmap <Leader>gim <Plug>(go-imports)
 augroup END
-
-aug neomaker
-  au!
-  au BufWritePost * Neomake
-  au BufRead,BufNewFile,BufEnter *test.jsx,*test.js let b:neomake_javascript_enabled_makers=[]
-aug END
 
 augroup startgroup
   autocmd!
@@ -401,13 +423,13 @@ augroup reload_vimrc
   autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 
-aug neoterm_test_rspec
-  au VimEnter,BufRead,BufNewFile *_spec.rb,*_feature.rb call neoterm#test#libs#add('rspec')
-  au VimEnter *
-        \ if filereadable('spec/spec_helper.rb') |
-        \   call neoterm#test#libs#add('rspec') |
-        \ endif
-aug END
+" aug neoterm_test_rspec
+  " au VimEnter,BufRead,BufNewFile *_spec.rb,*_feature.rb call neoterm#test#libs#add('rspec')
+  " au VimEnter *
+        " \ if filereadable('spec/spec_helper.rb') |
+        " \   call neoterm#test#libs#add('rspec') |
+        " \ endif
+" aug END
 
 " if executable('ag')
   " " Use Ag over Grep
@@ -455,13 +477,6 @@ call textobj#user#plugin('keyvalue', {
 \     'move-p': 'tT',
 \   },
 \ })
-" call textobj#user#plugin('attributes', {
-" \   'code': {
-" \     'pattern': ['<\w\+\s', '/\?>'],
-" \     'select-a': 'aa',
-" \     'select-i': 'ia',
-" \   },
-" \ })
 
 " Fast lnext, lprev
 nmap <leader>lf :lfirst<cr>
@@ -488,11 +503,6 @@ imap jj <ESC>
 
 imap <C-P> <cr><Esc>O
 
-" quick align
-map <leader><leader>a :Align = =>
-map <leader>a: :Align :<cr>
-map <leader>a> :Align =><cr>
-
 " Treat long lines as break lines
 map j gj
 map k gk
@@ -511,8 +521,6 @@ vnoremap <S-Tab> <gv
 nnoremap <Space> 15<C-E>
 nnoremap <C-Space> 15<C-Y>
 
-nmap <leader>ss vii:sort<cr>
-
 " cmap W w !sudo tee % >/dev/null<CR>
 "
 imap <C-S-Space> <C-X><C-O>
@@ -520,7 +528,7 @@ imap <C-S-Space> <C-X><C-O>
 set guioptions-=m
 
 " search for word under cursor
-nnoremap * /<C-R><C-W><CR>
+" nnoremap * /<C-R><C-W><CR>
 " grep for word under cursor and highlight
 nnoremap & /<C-R><C-W><CR>:grep! "<C-R><C-W>"<CR>:cw<CR>
 " search for selected text
@@ -540,3 +548,34 @@ vnoremap <silent> & :<C-U>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 tnoremap <Esc> <C-\><C-n>
+
+function! SortLines()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  execute 'c"'
+  let sortedLines = sort(lines)
+  put=sortedLines
+  " let lines[0] = lines[0][col1 - 1:]
+  " return join(sortedLines, "\n")
+endfunction
+
+function! s:open_controller(e)
+  execute "normal! :Econtroller " . split(a:e)[-1] . "\<cr>"
+endfunction
+
+command! Railway call fzf#run({
+\ 'source':  "bin/rails routes",
+\ 'sink':    function('<sid>open_controller'),
+\ 'options': '-m -x +s',
+\ 'down':    '40%' })
+
+fu! EsearchInFiles(argv) abort
+  let original = g:esearch#adapter#ag#options
+  let g:esearch#adapter#ag#options = input('Search options: ')
+  call esearch#init(a:argv)
+  let g:esearch#adapter#ag#options = original
+endfu
+
+" replace these mapping with the ones you prefer
+noremap  <silent><leader>ft :<C-u>call EsearchInFiles({})<CR>

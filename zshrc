@@ -15,8 +15,8 @@ export ANDROID_HOME=/usr/local/opt/android-sdk
 fpath=(/Users/JJ/.zsh/completion $fpath)
 
 # Load nvm
-export NVM_DIR=~/.nvm
-. $(brew --prefix nvm)/nvm.sh
+export NVM_DIR="$HOME/.nvm"
+  . "/usr/local/opt/nvm/nvm.sh"
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
@@ -84,12 +84,31 @@ fcoc() {
   commit=$(echo "$commits" | fzf --tac +s +m -e) &&
   git checkout $(echo "$commit" | sed "s/ .*//")
 }
-# fbx - force delete git branch
+# fbx - delete git branch
 fbx() {
   local branches branch
   branches=$(git branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
+  git branch --delete $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+# fbX - force delete git branch
+fbX() {
+  local branches branch
+  branches=$(git branch -vv) &&
+  branch=$(echo "$branches" | fzf +m) &&
   git branch --delete --force $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+# fundo - undo changes of a file
+fundo() {
+  local s file
+  s=$(git status -s | fzf +m) &&
+  file=$(echo "$s" | awk '{print $2}') &&
+  git checkout -- $file &&
+  echo "undo changes of $file"
+}
+# fpc - push commit
+fpc() {
+
 }
 
 # fzf - fasd integration

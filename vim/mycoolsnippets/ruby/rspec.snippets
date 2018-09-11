@@ -7,5 +7,9 @@ it { is_expected.to be_truthy }
 endsnippet
 
 snippet allow "allow to" b
-allow($1).to receive(:$2)${3:.with($4)}.and_return(${5:true})
+allow($1).to receive(:$2)${3:.with($4).and_return(${5:true})}
+endsnippet
+
+snippet expr "expected to receive"
+expect($1).to receive(:$2)${3:.with($4)}
 endsnippet
