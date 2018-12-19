@@ -11,3 +11,9 @@ LongParameterList:
   max_params: 5
 NilCheck:
   enabled: false
+DuplicateMethodCall:
+  max_calls: 2
+TooManyStatements:
+  max_statements: 10
+UtilityFunction:
+  public_methods_only: true

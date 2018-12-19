@@ -327,13 +327,3 @@ endsnippet
 snippet const "const" b
 const { $1 } = ${2:this.props};
 endsnippet
-
-snippet itres "reducer it" b
-it("responds to the $1 action", () => {
-  const currentState = deepFreeze({$3});
-  const newState = currentBrandReducer(currentState, {
-    type: "$1"$2
-  });
-  expect(newState).to.eql({$4});
-});
-endsnippet

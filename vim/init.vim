@@ -24,24 +24,26 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-rhubarb'
 Plug 'Lokaltog/vim-easymotion'
   let g:EasyMotion_smartcase = 1
-  nmap s <Plug>(easymotion-overwin-f)
+  nmap t <Plug>(easymotion-overwin-f)
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
   let g:UltiSnipsSnippetsDir="~/.vim/mycoolsnippets"
   let g:UltiSnipsSnippetDirectories=["UltiSnips", "mycoolsnippets"]
-  let g:UltiSnipsListSnippets="<C-f>"
+  " let g:UltiSnipsListSnippets="<C-f>"
 Plug 'scrooloose/nerdcommenter'
   let g:NERDSpaceDelims=1
 Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
   nnoremap <M-j> :NERDTreeToggle<cr>
   nnoremap <M-k> :NERDTreeFind<cr>
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'w0rp/ale'
   let g:airline#extensions#ale#enabled = 1
   let g:ale_open_list = 1
-  " let g:ale_sign_error = '💩'
-  " let g:ale_sign_warning = '😵'
-  " let g:ale_sign_info = '😮'
+  let g:ale_sign_error = ''
+  let g:ale_sign_warning = ''
+  let g:ale_sign_info = ''
   let g:ale_lint_on_enter = 0
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_lint_on_insert_leave = 0
@@ -61,7 +63,7 @@ Plug 'junegunn/limelight.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
   let g:fzf_history_dir = '~/.fzf-history'
   let g:fzf_files_options =
-    \ '--preview "(pygmentize {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+    \ '--preview "bat --theme="OneHalfDark" --style=numbers,changes --color=always {} | head -'.&lines.'"'
   nnoremap <C-p> :Files<cr>
   nnoremap ; :Buffers<cr>
   nnoremap <C-g> :BLines<cr>
@@ -76,7 +78,9 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
   " imap <c-x><c-f> <plug>(fzf-complete-path)
   " imap <c-x><c-j> <plug>(fzf-complete-file-ag)
   " imap <c-x><c-l> <plug>(fzf-complete-line)
-  command! -bang -nargs=* MyAg call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+  command! -bang -nargs=* MyAg call fzf#vim#ag(<q-args>, {
+    \ 'options': '--preview "linestart=\$(expr {+2} - 5); if [ \$linestart -lt 0 ]; then linestart=0; fi; lineend=\$(expr {+2} + 5); bat --theme="OneHalfDark" --style=numbers,changes --color=always --line-range \$linestart:\$lineend {+1}" --delimiter : --nth 4..'
+    \ }, <bang>0)
   command! -bang -nargs=+ -complete=dir Rag call fzf#vim#ag_raw(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 Plug 'janko-m/vim-test'
   let test#strategy = "neoterm"
@@ -88,12 +92,6 @@ Plug 'janko-m/vim-test'
 Plug 'kassio/neoterm'
   let g:neoterm_size="120"
   let g:neoterm_default_mod="vertical"
-  let g:neoterm_rspec_lib_cmd = 'bin/rspec'
-  let g:neoterm_cucumber_lib_cmd = 'bin/cucumber'
-  " let g:neoterm_run_tests_bg = 1
-  " set statusline+=%#NeotermTestRunning#%{neoterm#test#status('running')}%*
-  " set statusline+=%#NeotermTestSuccess#%{neoterm#test#status('success')}%*
-  " set statusline+=%#NeotermTestFailed#%{neoterm#test#status('failed')}%*
 Plug 'eugen0329/vim-esearch'
   let g:esearch = {
     \ 'adapter':    'ag',
@@ -111,6 +109,7 @@ Plug 'nathanaelkane/vim-indent-guides'
   let g:indent_guides_start_level = 2
 Plug 'altercation/vim-colors-solarized'
 Plug 'iCyMind/NeoSolarized'
+Plug 'morhetz/gruvbox'
 Plug 'mattn/emmet-vim'
   let g:user_emmet_settings = {
   \  'indentation' : '  ',
@@ -127,6 +126,12 @@ Plug 'AndrewRadev/splitjoin.vim'
 aug javascript
   autocmd FileType javascript let b:splitjoin_trailing_comma=1
 aug END
+Plug 'svermeulen/vim-easyclip'
+  let g:EasyClipAutoFormat = 1
+  let g:EasyClipUsePasteToggleDefaults = 0
+  let g:EasyClipUseSubstituteDefaults = 1
+  nnoremap gm m
+  nmap <c-b> <plug>EasyClipSwapPasteBackwards
 
 " Auto completion
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -174,7 +179,7 @@ Plug 'autozimu/LanguageClient-neovim', {
       " \'y'    : '%R %b %d',
       " \'z'    : '#H'}
 Plug 'bling/vim-airline'
-  let g:airline#extensions#branch#enabled = 0
+  " let g:airline#extensions#branch#enabled = 0
   let g:airline#extensions#tabline#enabled=1
   let g:airline#extensions#tabline#buffer_nr_show=1
   if !exists('g:airline_symbols')
@@ -187,7 +192,10 @@ Plug 'bling/vim-airline'
   let g:airline_symbols.branch = ''
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
+  let g:airline#extensions#tabline#left_sep = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
 Plug 'vim-airline/vim-airline-themes'
+  let g:airline_theme='gruvbox'
 Plug 'kana/vim-textobj-user'
 Plug 'sjl/vitality.vim'
   let g:vitality_fix_cursor=0
@@ -200,6 +208,26 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'rizzatti/dash.vim'
   nmap <silent> <leader>ds <Plug>DashSearch
 Plug 'wellle/targets.vim'
+function! s:pp_js(line)
+ " Strip escape codes
+ echom a:line
+ return a:line
+ " return substitute(a:line, "\<esc>".'\[\d\(\a\|\dm\)', '', 'g')
+endfunction
+
+Plug 'metakirby5/codi.vim'
+  let g:codi#rightalign=0
+  let g:codi#interpreters = {
+            \ 'javascript': {
+            \     'bin': 'node',
+            \     'prompt': '^\(>\|\.\.\.\+\) ',
+            \     'preprocess': function('s:pp_js'),
+            \ },
+       \ 'babel': {
+           \ 'bin': ['npx', 'babel-node'],
+           \ 'prompt': '^\(>\|\.\.\.\+\) ',
+           \ },
+       \ }
 
 " Javascript Plugins
 Plug 'pangloss/vim-javascript'
@@ -292,7 +320,8 @@ syn on
 " set t_Co=256
 set termguicolors
 set background=dark
-color NeoSolarized
+" color NeoSolarized
+color gruvbox
 "let g:solarized_termcolors=256
 "let g:solarized_termtrans=1
 
@@ -367,9 +396,8 @@ augroup END
 augroup startgroup
   autocmd!
   autocmd VimEnter * command! -nargs=? -complete=file AllFiles :call fzf#vim#files(<q-args>, { 'source': 'ag --hidden -U -g ""' })
-  " autocmd VimEnter * command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '', {'options': "--preview 'pygmentize $(cut -d: -f1 <<< {}) 2> /dev/null | head -$(($(cut -d: -f2 <<< {}) + 10)) | tail -n 21'"})
-  autocmd VimEnter * command! -nargs=* -complete=file Commits :call fzf#vim#commits(fzf#wrap('commits',
-    \ {'options': '--preview "echo {} | grep -o ''[a-f0-9]\{7\}'' | head -1 | xargs -I % sh -c ''git log -1 --stat --color=always %''"'}))
+  " autocmd VimEnter * command! -nargs=* -complete=file Commits :call fzf#vim#commits(fzf#wrap('commits',
+    " \ {'options': '--preview "echo {} | grep -o ''[a-f0-9]\{7\}'' | head -1 | xargs -I % sh -c ''git log -1 --stat --color=always %''"'}))
   "
   " autocmd FileType perl,html,css,xml setlocal shiftwidth=4
   autocmd FileType php,c setlocal shiftwidth=4
@@ -517,14 +545,8 @@ nmap <BS> <C-W>h
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-" Use Space to scroll page
-nnoremap <Space> 15<C-E>
-nnoremap <C-Space> 15<C-Y>
-
 " cmap W w !sudo tee % >/dev/null<CR>
 "
-imap <C-S-Space> <C-X><C-O>
-
 set guioptions-=m
 
 " search for word under cursor
@@ -579,3 +601,8 @@ endfu
 
 " replace these mapping with the ones you prefer
 noremap  <silent><leader>ft :<C-u>call EsearchInFiles({})<CR>
+
+augroup CloseLoclistWindowGroup
+  autocmd!
+  autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
