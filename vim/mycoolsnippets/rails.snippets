@@ -82,3 +82,8 @@ property :$1 do
   key :type, :$5`!p snip.rv = autocomplete(t[5], ["integer", "boolean", "string", "object", "array"])`
 end$0
 endsnippet
+
+snippet letb "let() {}" b
+let(:${1:a}) { $2`!p snip.rv=autocomplete(t[2], ["build", "build_stubbed", "create"])` :$3 }
+endsnippet
+  

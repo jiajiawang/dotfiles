@@ -24,7 +24,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-rhubarb'
 Plug 'Lokaltog/vim-easymotion'
   let g:EasyMotion_smartcase = 1
-  nmap t <Plug>(easymotion-overwin-f)
+  nmap f <Plug>(easymotion-overwin-f)
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
   let g:UltiSnipsExpandTrigger="<C-l>"
   let g:UltiSnipsEditSplit="vertical"
@@ -53,14 +53,41 @@ Plug 'w0rp/ale'
   \   'ruby': ['reek', 'rubocop', 'ruby'],
   \}
   let g:ale_fixers = {
-  \   'javascript': ['eslint'],
+  \   'javascript': ['prettier'],
+  \   'css': ['prettier'],
+  \   'scss': ['prettier'],
   \}
   let g:ale_fix_on_save = 1
   let g:ale_emit_conflict_warnings = 0
+  let g:ale_pattern_options = {
+  \ '-test\.jsx\?$': {'ale_linters': []},
+  \}
+  let g:ale_pattern_options_enabled = 1
 Plug 'junegunn/limelight.vim'
   let g:limelight_conceal_ctermfg = 240  " Solarized Base1
   let g:limelight_conceal_guifg = '#8a8a8a'  " Solarized Base1
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+  let $FZF_DEFAULT_OPTS='--layout=reverse'
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+  function! FloatingFZF()
+    let buf = nvim_create_buf(v:false, v:true)
+    call setbufvar(buf, '&signcolumn', 'no')
+
+    let height = &lines - 3
+    let width = float2nr(&columns - (&columns * 2 / 10))
+    let col = float2nr((&columns - width) / 2)
+
+    let opts = {
+          \ 'relative': 'editor',
+          \ 'row': 1,
+          \ 'col': col,
+          \ 'width': width,
+          \ 'height': height
+          \ }
+
+    call nvim_open_win(buf, v:true, opts)
+  endfunction
   let g:fzf_history_dir = '~/.fzf-history'
   let g:fzf_files_options =
     \ '--preview "bat --theme="OneHalfDark" --style=numbers,changes --color=always {} | head -'.&lines.'"'
@@ -69,7 +96,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
   nnoremap <C-g> :BLines<cr>
   nnoremap <A-l> :MyAg<cr>
   nmap <C-s> :let @"=expand("%:t:r")<cr><C-p><Esc>pi
-  nmap <C-f> :let @"=expand("<cfile>")<cr><C-p><Esc>pi
+  nmap <C-f> :let @"=expand("<cfile>")<cr><C-g><Esc>pi
+  nmap <C-S-f> :let @"=expand("<cfile>")<cr><C-p><Esc>pi
   nmap <leader><tab> <plug>(fzf-maps-n)
   xmap <leader><tab> <plug>(fzf-maps-x)
   omap <leader><tab> <plug>(fzf-maps-o)
@@ -126,12 +154,31 @@ Plug 'AndrewRadev/splitjoin.vim'
 aug javascript
   autocmd FileType javascript let b:splitjoin_trailing_comma=1
 aug END
-Plug 'svermeulen/vim-easyclip'
-  let g:EasyClipAutoFormat = 1
-  let g:EasyClipUsePasteToggleDefaults = 0
-  let g:EasyClipUseSubstituteDefaults = 1
-  nnoremap gm m
-  nmap <c-b> <plug>EasyClipSwapPasteBackwards
+Plug 'svermeulen/vim-cutlass'
+ nnoremap m d
+ xnoremap m d
+ nnoremap mm dd
+ nnoremap M D
+Plug 'svermeulen/vim-yoink'
+  let g:yoinkIncludeDeleteOperations=1
+  let g:yoinkAutoFormatPaste=1
+  nmap <c-b> <plug>(YoinkPostPasteSwapBack)
+  " nmap <c-s-b> <plug>(YoinkPostPasteSwapForward)
+  nmap p <plug>(YoinkPaste_p)
+  nmap P <plug>(YoinkPaste_P)
+Plug 'svermeulen/vim-subversive'
+  nmap s <plug>(SubversiveSubstitute)
+  nmap ss <plug>(SubversiveSubstituteLine)
+  nmap S <plug>(SubversiveSubstituteToEndOfLine)
+  " nmap <leader><leader>s <plug>(SubversiveSubstituteRange)
+  " xmap <leader><leader>s <plug>(SubversiveSubstituteRange)
+  " nmap <leader><leader>ss <plug>(SubversiveSubstituteWordRange)
+" Plug 'svermeulen/vim-easyclip'
+  " let g:EasyClipAutoFormat = 1
+  " let g:EasyClipUsePasteToggleDefaults = 0
+  " let g:EasyClipUseSubstituteDefaults = 1
+  " nnoremap gm m
+  " nmap <c-b> <plug>EasyClipSwapPasteBackwards
 
 " Auto completion
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -145,21 +192,55 @@ Plug 'svermeulen/vim-easyclip'
   " return !col || getline('.')[col - 1]  =~ '\s'
   " endfunction"}}}
 
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
-aug ncm2
-  " enable ncm2 for all buffers
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-aug END
-set completeopt=noinsert,menuone,noselect
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'ncm2/ncm2-tern'
-Plug 'ncm2/ncm2-tagprefix'
+" Plug 'roxma/nvim-yarp'
+" Plug 'ncm2/ncm2'
+" aug ncm2
+  " " enable ncm2 for all buffers
+  " autocmd BufEnter * call ncm2#enable_for_buffer()
+" aug END
+" set completeopt=noinsert,menuone,noselect
+" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Plug 'ncm2/ncm2-bufword'
+" Plug 'ncm2/ncm2-path'
+" Plug 'ncm2/ncm2-tmux'
+" Plug 'ncm2/ncm2-ultisnips'
+" Plug 'ncm2/ncm2-tern'
+" Plug 'ncm2/ncm2-tagprefix'
+
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'neoclide/coc-sources'
+Plug 'neoclide/coc-snippets'
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
 Plug 'autozimu/LanguageClient-neovim', {
   \ 'branch': 'next',
@@ -197,6 +278,7 @@ Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
   let g:airline_theme='gruvbox'
 Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-line'
 Plug 'sjl/vitality.vim'
   let g:vitality_fix_cursor=0
   let g:vitality_always_assume_iterm = 1
@@ -335,6 +417,9 @@ set guifont=Ubuntu\ Mono:h11
 set nobackup
 set noswapfile
 
+set hidden
+set cmdheight=2
+set signcolumn=yes
 
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set showcmd                    " show incomplete cmds down the bottom
@@ -373,7 +458,7 @@ set complete+=k,]
 set previewheight=20
 set splitbelow
 set splitright
-set diffopt+=vertical,iwhite
+set diffopt=filler,internal,algorithm:histogram,indent-heuristic
 set foldlevelstart=2
 
 " set shortmess+=c
@@ -535,6 +620,9 @@ imap <C-P> <cr><Esc>O
 map j gj
 map k gk
 
+" Split line
+nmap <S-S> i<cr><ESC>
+
 " workaround for nvim vim-tmux-navigator issue
 nmap <BS> <C-W>h
 " if has('nvim')
@@ -544,6 +632,7 @@ nmap <BS> <C-W>h
 " Shifting blocks visually
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+
 
 " cmap W w !sudo tee % >/dev/null<CR>
 "

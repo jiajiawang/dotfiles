@@ -1,19 +1,20 @@
 ---
 exclude_paths:
   - db
-IrresponsibleModule:
-  enabled: false
-Attribute:
-  enabled: false
-NestedIterators:
-  max_allowed_nesting: 2
-LongParameterList:
-  max_params: 5
-NilCheck:
-  enabled: false
-DuplicateMethodCall:
-  max_calls: 2
-TooManyStatements:
-  max_statements: 10
-UtilityFunction:
-  public_methods_only: true
+detectors:
+  IrresponsibleModule:
+    enabled: false
+  Attribute:
+    enabled: false
+  NestedIterators:
+    max_allowed_nesting: 2
+  LongParameterList:
+    max_params: 5
+  NilCheck:
+    enabled: false
+  DuplicateMethodCall:
+    max_calls: 2
+  TooManyStatements:
+    max_statements: 10
+  UtilityFunction:
+    public_methods_only: true

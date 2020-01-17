@@ -35,9 +35,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "$2`!p snip.rv = to_kebab_case(t[1])`.scss";
 
-const ${1:Component} = (props) => (
-  $3
-);
+function ${1:Component}(props) {
+  return (
+    $3
+  )
+}
 
 $1.propTypes = {
   $4
@@ -47,11 +49,11 @@ export default $1;
 endsnippet
 
 snippet "(\w+)=t" "prop={ this.props.prop }" br
-`!p snip.rv = match.group(1)`={ this.props.${1:`!p snip.rv = match.group(1)`} }
+`!p snip.rv = match.group(1)`={this.props.${1:`!p snip.rv = match.group(1)`}}
 endsnippet
 
 snippet "(\w+)=" "prop={ props.prop }" br
-`!p snip.rv = match.group(1)`={ props.${1:`!p snip.rv = match.group(1)`} }
+`!p snip.rv = match.group(1)`={props.${1:`!p snip.rv = match.group(1)`}}
 endsnippet
 
 snippet styles "div styles" b
@@ -77,3 +79,8 @@ describe("$1", () => {
   $0
 });
 endsnippet
+
+snippet unused "no-unused-prop-types"
+// eslint-disable-line react/no-unused-prop-types
+endsnippet
+  

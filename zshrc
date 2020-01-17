@@ -14,9 +14,9 @@ export ANDROID_HOME=/usr/local/opt/android-sdk
 
 fpath=(/Users/JJ/.zsh/completion $fpath)
 
-# Load nvm
-export NVM_DIR="$HOME/.nvm"
-  . "/usr/local/opt/nvm/nvm.sh"
+# set go path
+export GOPATH=~/workspace/go
+export PATH=$PATH:$GOPATH/bin
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
@@ -128,3 +128,26 @@ fkill() {
     echo $pid | xargs kill -${1:-9}
   fi
 }
+
+hubpr() {
+  hub pull-request -o -F - --edit <<< "$(git log -1 --pretty=format:%s)
+
+https://rangeme.atlassian.net/browse/$(git rev-parse --abbrev-ref HEAD | cut -c1-7)
+$(git log -1 --pretty=format:%b)"
+}
+
+# Load nvm
+# export NVM_DIR="$HOME/.nvm"
+# . "/usr/local/opt/nvm/nvm.sh"
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh

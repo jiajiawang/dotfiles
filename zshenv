@@ -30,9 +30,5 @@ fi
 [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
 source ~/.zalias
 
-# set go path
-export GOPATH=~/workspace/go
-export PATH=$PATH:$GOPATH/bin
-
 # docker
 # eval $(docker-machine env default)
