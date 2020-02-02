@@ -1,6 +1,7 @@
 - clean: ['~']
 
 - link:
+    ~/.config/nvim: vim/
     ~/.dotfiles: ""
     ~/.vim: vim/
     ~/.tmux.conf: tmux.conf
