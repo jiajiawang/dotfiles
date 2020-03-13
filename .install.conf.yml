@@ -21,3 +21,5 @@
 - shell:
   - [git submodule update --init --recursive --remote, Installing submodules]
   - [git submodule foreach git pull origin master, Updating submodules]
+  - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"]
+  - [brew bundle]
