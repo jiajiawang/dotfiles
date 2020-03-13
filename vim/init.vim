@@ -151,6 +151,7 @@ Plug 'sjl/gundo.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'AndrewRadev/splitjoin.vim'
   let g:splitjoin_ruby_curly_braces = 0
+  let g:splitjoin_ruby_hanging_args = 0
 aug javascript
   autocmd FileType javascript let b:splitjoin_trailing_comma=1
 aug END
