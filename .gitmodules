@@ -4,9 +4,6 @@
 [submodule ".zprezto"]
 	path = .zprezto
 	url = https://github.com/sorin-ionescu/prezto
-[submodule "tpm"]
-	path = tmux/plugins/tpm
-	url = https://github.com/tmux-plugins/tpm
 [submodule "rbenv/plugins/rbenv-default-gems"]
 	path = rbenv/plugins/rbenv-default-gems
 	url = https://github.com/rbenv/rbenv-default-gems
@@ -19,3 +16,6 @@
 [submodule "rbenv/plugins/rbenv-gem-rehash"]
 	path = rbenv/plugins/rbenv-gem-rehash
 	url = https://github.com/rbenv/rbenv-gem-rehash
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
