@@ -16,7 +16,7 @@ fpath=(/Users/JJ/.zsh/completion $fpath)
 
 # set go path
 export GOPATH=~/workspace/go
-export PATH=$PATH:$GOPATH/bin
+export PATH=/usr/local/opt/postgresql@11/bin:$PATH:$GOPATH/bin
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
@@ -90,13 +90,15 @@ fbx() {
   branches=$(git branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
   git branch --delete $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-}
-# fbX - force delete git branch
-fbX() {
-  local branches branch
-  branches=$(git branch -vv) &&
-  branch=$(echo "$branches" | fzf +m) &&
-  git branch --delete --force $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+  if (( $? == 0 )); then
+  else
+    echo "Force Delete? y/n"
+    read -q
+    echo
+    if [[ $REPLY == "y" ]]; then
+      git branch -D $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+    fi
+  fi
 }
 # fundo - undo changes of a file
 fundo() {

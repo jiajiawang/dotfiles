@@ -1,4 +1,5 @@
 tap "homebrew/cask"
+tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 
 # the silver search
@@ -25,6 +26,7 @@ brew "ruby-build"
 brew "tmux"
 brew "wget"
 
+cask "alfred"
 cask "appcleaner"
 cask "aws-vault"
 cask "chromedriver"
@@ -33,6 +35,7 @@ cask "flux"
 cask "font-ubuntumono-nerd-font-mono"
 cask "gitup"
 cask "google-chrome"
+cask "google-photos-backup-and-sync"
 cask "iterm2"
 cask "licecap"
 cask "slack"

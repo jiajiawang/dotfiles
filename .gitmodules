@@ -1,21 +1,28 @@
 [submodule ".dotbot"]
 	path = .dotbot
 	url = https://github.com/anishathalye/dotbot
+    ignore = all
 [submodule ".zprezto"]
 	path = .zprezto
 	url = https://github.com/sorin-ionescu/prezto
+    ignore = all
 [submodule "rbenv/plugins/rbenv-default-gems"]
 	path = rbenv/plugins/rbenv-default-gems
 	url = https://github.com/rbenv/rbenv-default-gems
+    ignore = all
 [submodule "rbenv/plugins/rbenv-ctags"]
 	path = rbenv/plugins/rbenv-ctags
 	url = https://github.com/tpope/rbenv-ctags
+    ignore = all
 [submodule "rbenv/plugins/ruby-build"]
 	path = rbenv/plugins/ruby-build
 	url = https://github.com/rbenv/ruby-build
+    ignore = all
 [submodule "rbenv/plugins/rbenv-gem-rehash"]
 	path = rbenv/plugins/rbenv-gem-rehash
 	url = https://github.com/rbenv/rbenv-gem-rehash
+    ignore = all
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+    ignore = all

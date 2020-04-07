@@ -1,8 +1,8 @@
 vim/plugged/*
-tmux/Session.vim
-tmux/resurrect/
-tmux/plugins/
+vim/.netrwhist
 
 .zprezto/
 
 __pycache__/
+
+.DS_Store

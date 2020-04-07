@@ -1,11 +1,17 @@
 - clean: ['~']
 
+- create:
+  - ~/workspace
+  - ~/.config
+  - ~/.tmux/plugins
+  - ~/.rbenv
+
 - link:
     ~/.config/nvim: vim/
     ~/.dotfiles: ""
     ~/.vim: vim/
     ~/.tmux.conf: tmux.conf
-    ~/.tmux: tmux/
+    ~/.tmux/plugins/tpm: tmux-plugins/tpm
     ~/.zprezto: .zprezto/
     ~/.zshenv: zshenv
     ~/.zshrc: zshrc
@@ -16,14 +22,12 @@
     ~/.rbenv/plugins: rbenv/plugins
     ~/.rbenv/default-gems: rbenv/default-gems
     ~/.gemrc: gemrc
-    ~/.reek.yml: reek
-
-- create:
-  - ~/workspace
+    ~/.reek.yml: reek.yml
+    ~/.pryrc: pryrc.rb
 
 - shell:
   - [git submodule update --init --recursive --remote, Installing submodules]
   - [git submodule foreach git pull origin master, Updating submodules]
-  - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"]
+  - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)", Installing brew]
   - [brew bundle]
   - [pip3 install neovim]
