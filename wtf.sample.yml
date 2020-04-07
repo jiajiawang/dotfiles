@@ -1,0 +1,176 @@
+wtf:
+  colors:
+    border:
+      focusable: darkslateblue
+      focused: orange
+      normal: gray
+  grid:
+    columns: [60, 40, 40, 40, 100]
+    rows: [10, 10, 10, 10, 10, 10]
+  refreshInterval: 1
+  mods:
+    github:
+      title: "\uf09b"
+      customQueries:
+        myRecents:
+          title: "My Recents"
+          filter: "is:pr is:closed author:jiajiawang"
+          perPage: 10
+        rocketList:
+          title: "🚀 🚀"
+          filter: "is:open is:pr label::rocket:"
+      enabled: true
+      enableStatus: true
+      position:
+        top: 0
+        left: 0
+        height: 6
+        width: 1
+      refreshInterval: 300
+      repositories:
+        - "jiajiawang/dotfiles"
+      username: "jiajiawang"
+    todo:
+      title: "TODO ✅"
+      checkedIcon: "✔"
+      colors:
+        checked: gray
+        highlight:
+          fore: "black"
+          back: "orange"
+      enabled: true
+      filename: "todo.yml"
+      position:
+        top: 0
+        left: 1
+        height: 1
+        width: 2
+      refreshInterval: 3600
+    notes:
+      title: "Notes 📝"
+      type: "todo"
+      checkedIcon: "X"
+      colors:
+        checked: gray
+        highlight:
+          fore: "black"
+          back: "orange"
+      enabled: true
+      filename: "notes.yml"
+      position:
+        top: 1
+        left: 1
+        height: 1
+        width: 2
+      refreshInterval: 3600
+    ipinfo:
+      colors:
+        name: "lightblue"
+        value: "white"
+      enabled: true
+      position:
+        top: 3
+        left: 3
+        height: 1
+        width: 1
+      refreshInterval: 150
+    power:
+      enabled: true
+      position:
+        top: 0
+        left: 3
+        height: 1
+        width: 1
+      refreshInterval: 15
+      title: "⚡️"
+    resourceusage:
+      cpuCombined: false
+      enabled: true
+      position:
+        top: 4
+        left: 3
+        height: 2
+        width: 1
+      refreshInterval: 1
+      showCPU: true
+      showMem: true
+      showSwp: true
+    clocks:
+      colors:
+        rows:
+          even: "lightblue"
+          odd: "white"
+      enabled: true
+      locations:
+        UTC: "Etc/UTC"
+        Beijing: "Asia/Shanghai"
+        SanFrancisco: "America/Los Angeles"
+      position:
+        top: 2
+        left: 3
+        height: 1
+        width: 1
+      refreshInterval: 15
+      sort: "alphabetical"
+      title: "Clocks 🕔"
+      type: "clocks"
+    prettyweather:
+      title: "Weather 🌤"
+      enabled: true
+      city: "sydney"
+      position:
+        top: 1
+        left: 3
+        height: 1
+        width: 1
+      refreshInterval: 300
+      unit: "m"
+      view: 0
+      language: "en"
+    jira:
+      colors:
+        rows:
+          even: "lightblue"
+          odd: "white"
+      # JIRA domain
+      domain: "https://your_domain.atlassian.net/"
+      # JIRA email
+      email: "your_email@gmail.com"
+      enabled: false
+      jql: ""
+      position:
+        top: 2
+        left: 1
+        height: 2
+        width: 2
+      project: "RM"
+      refreshInterval: 600
+      # JIRA username
+      username: "your_username"
+      verifyServerCertificate: true
+    vim:
+      type: "subreddit"
+      enabled: true
+      numberOfPosts: 8
+      position:
+        top: 4
+        left: 1
+        height: 1
+        width: 2
+      sortOrder: top
+      subreddit: "vim"
+      topTimePeriod: week
+      refreshInterval: 600
+    nvim:
+      type: "subreddit"
+      enabled: true
+      numberOfPosts: 8
+      position:
+        top: 5
+        left: 1
+        height: 1
+        width: 2
+      sortOrder: top
+      subreddit: "neovim"
+      topTimePeriod: month
+      refreshInterval: 900

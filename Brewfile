@@ -1,6 +1,7 @@
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
+tap "wtfutil/wtfutil"
 
 # the silver search
 brew "ag"
@@ -25,6 +26,7 @@ brew "reattach-to-user-namespace"
 brew "ruby-build"
 brew "tmux"
 brew "wget"
+brew "wtfutil"
 
 cask "alfred"
 cask "appcleaner"

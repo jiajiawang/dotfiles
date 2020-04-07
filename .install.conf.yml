@@ -26,6 +26,8 @@
     ~/.pryrc: pryrc.rb
 
 - shell:
+  - [cp -n zshenv.local.sample ~/.zshenv.local || echo]
+  - [cp -n wtf.sample.yml ~/.config/wtf/config.yml || echo]
   - [git submodule update --init --recursive --remote, Installing submodules]
   - [git submodule foreach git pull origin master, Updating submodules]
   - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)", Installing brew]
