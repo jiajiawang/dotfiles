@@ -102,11 +102,12 @@ fbx() {
 }
 # fundo - undo changes of a file
 fundo() {
-  local s file
-  s=$(git status -s | fzf +m) &&
-  file=$(echo "$s" | awk '{print $2}') &&
-  git checkout -- $file &&
-  echo "undo changes of $file"
+  local files=$(git ls-files -m | fzf -m)
+
+  if [[ $files ]]; then
+    for file in $(echo $files);
+    do; git checkout -- $file; done;
+  fi
 }
 # fpc - push commit
 fpc() {
