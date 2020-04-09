@@ -22,7 +22,7 @@
 	path = rbenv/plugins/rbenv-gem-rehash
 	url = https://github.com/rbenv/rbenv-gem-rehash
     ignore = all
-[submodule "tmux/plugins/tpm"]
-	path = tmux/plugins/tpm
+[submodule "tmux-plugins/tpm"]
+	path = tmux-plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
     ignore = all
