@@ -26,3 +26,6 @@
 	path = tmux-plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
     ignore = all
+[submodule "vim/pack/my-plugins/start/fterm.nvim"]
+	path = vim/pack/my-plugins/start/fterm.nvim
+	url = https://github.com/jiajiawang/fterm.nvim

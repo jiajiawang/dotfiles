@@ -111,15 +111,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
     \ }, <bang>0)
   command! -bang -nargs=+ -complete=dir Rag call fzf#vim#ag_raw(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 Plug 'janko-m/vim-test'
-  let test#strategy = "neoterm"
-  nnoremap <silent> ,,, :Ttoggle<cr>
   nnoremap <silent> ,rt :TestSuite<CR>
   nnoremap <silent> ,rf :TestFile<CR>
   nnoremap <silent> ,rn :TestNearest<CR>
   nnoremap <silent> ,rr :TestLast<CR>
-Plug 'kassio/neoterm'
-  let g:neoterm_size="120"
-  let g:neoterm_default_mod="vertical"
 Plug 'eugen0329/vim-esearch'
   let g:esearch = {
     \ 'adapter':    'ag',
@@ -696,3 +691,18 @@ augroup CloseLoclistWindowGroup
   autocmd!
   autocmd QuitPre * if empty(&buftype) | lclose | endif
 augroup END
+
+packloadall
+lua require'fterm'.config({
+\ position="right",
+\ width=100,
+\ height=20,
+\ commands=true})
+nnoremap ,,, :FTermToggle<cr>
+
+function! FTermStrategry(cmd)
+ call luaeval('require"fterm".exec(_A)', a:cmd)
+endfunction
+
+let g:test#custom_strategies = {'fterm': function('FTermStrategry')}
+let g:test#strategy = 'fterm'
