@@ -87,3 +87,40 @@ snippet letb "let() {}" b
 let(:${1:a}) { $2`!p snip.rv=autocomplete(t[2], ["build", "build_stubbed", "create"])` :$3 }
 endsnippet
   
+snippet sec "swagger security" b
+security [api_token: []]
+endsnippet
+
+snippet cons "swagger consumes" b
+consumes "${1:application/json}"
+endsnippet
+
+snippet path "swagger path" b
+path "$1" do
+  $2
+end
+endsnippet
+
+snippet res "swagger response" b
+response "${1:200}", "$2" do
+  $3
+end
+endsnippet
+
+snippet run "swagger run_test!" b
+run_test!
+endsnippet
+
+snippet runr "swagger run_test! {}" b
+run_test! do |response|
+  $1
+end
+endsnippet
+
+snippet descm "method spec"
+describe "#${1:method}" do
+  subject { ${2:object}.$1 }
+
+  $0
+end
+endsnippet
