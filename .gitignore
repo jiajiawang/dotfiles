@@ -1,4 +1,4 @@
-vim/plugged/*
+vim/plugin/*
 vim/.netrwhist
 
 .zprezto/

@@ -7,6 +7,9 @@ fi
 
 bindkey "^[f" forward-word
 
+# Source navi
+source <(navi widget zsh)
+
 # Customize to your needs...
 export RUBYMOTION_ANDROID_NDK="${ZDOTDIR:-$HOME}/.rubymotion-android/ndk"
 export RUBYMOTION_ANDROID_SDK="${ZDOTDIR:-$HOME}/.rubymotion-android/sdk"
@@ -21,7 +24,6 @@ export PATH=/usr/local/opt/postgresql@11/bin:$PATH:$GOPATH/bin
 export VISUAL=nvim
 export EDITOR=$VISUAL
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 _gen_fzf_default_opts() {
   local base03="234"
   local base02="235"
@@ -43,7 +45,8 @@ _gen_fzf_default_opts() {
   export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_CTRL_R_OPTS="--preview-window down:3 --preview 'echo {}'"
-  export FZF_TMUX=0
+  export FZF_TMUX=1
+  export FZF_TMUX_OPTS="-p 70%"
 
   # Comment and uncomment below for the light theme.
 
@@ -59,24 +62,25 @@ _gen_fzf_default_opts() {
   # "
 }
 _gen_fzf_default_opts
-export FZF_COMPLETION_TRIGGER=''
-bindkey '^T' fzf-completion
-bindkey '^I' $fzf_default_completion
-# fbr - checkout git branch
-fbr() {
-  local branches branch
-  branches=$(git branch -vv) &&
-  branch=$(echo "$branches" | fzf +m) &&
-  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+# export FZF_COMPLETION_TRIGGER='**'
+# bindkey '^T' fzf-completion
+# bindkey '^I' $fzf_default_completion
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+alias fzfp="fzf-tmux $FZF_TMUX_OPTS"
+fbb() {
+  git branch -vv | \
+    fzfp --bind "enter:execute(echo {} | awk '{print \$1}' | xargs git checkout)+abort" \
+    --bind "ctrl-d:execute(echo {} | awk '{print \$1}' | xargs git branch --delete)+reload(git branch -vv)" \
+    --bind "ctrl-x:execute(echo {} | awk '{print \$1}' | xargs git branch -D)+reload(git branch -vv)" \
+    --bind "ctrl-r:reload(git branch -r -vv)" \
+    --bind "ctrl-t:reload(git branch -vv)" \
+    --preview "echo {} | awk '{print \$1}' | xargs git log --name-only" \
+    --header 'Press ENTER to checkout branch
+CTRL-R to load only remote branches
+CTRL-T to load only local branches
+CTRL-D to delete branch
+CTRL-X to force delete branch'
 }
-# fbrr - checkout git branch (including remote branches)
-fbrr() {
-  local branches branch
-  branches=$(git branch --all | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-         }
 # fcoc - checkout git commit
 fcoc() {
   local commits commit
@@ -84,47 +88,27 @@ fcoc() {
   commit=$(echo "$commits" | fzf --tac +s +m -e) &&
   git checkout $(echo "$commit" | sed "s/ .*//")
 }
-# fbx - delete git branch
-fbx() {
-  local branches branch
-  branches=$(git branch -vv) &&
-  branch=$(echo "$branches" | fzf +m) &&
-  git branch --delete $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-  if (( $? == 0 )); then
-  else
-    echo "Force Delete? y/n"
-    read -q
-    echo
-    if [[ $REPLY == "y" ]]; then
-      git branch -D $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-    fi
-  fi
-}
 # fundo - undo changes of a file
 fundo() {
-  local files=$(git ls-files -m | fzf -m)
+  local files=$(git ls-files -m | fzfp -m)
 
   if [[ $files ]]; then
     for file in $(echo $files);
     do; git checkout -- $file; done;
   fi
 }
-# fpc - push commit
-fpc() {
-
-}
 
 # fzf - fasd integration
 unalias z
 z() {
   local dir
-  dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+  dir="$(fasd -Rdl "$1" | fzfp -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
 
 # fkill - kill process
 fkill() {
   local pid
-  pid=$(ps -ef | sed 1d | fzf -m --preview-window down:3 --preview 'echo {}' | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzfp -m --preview-window down:3 --preview 'echo {}' | awk '{print $2}')
 
   if [ "x$pid" != "x" ]
   then
@@ -140,17 +124,5 @@ $(git log -1 --pretty=format:%b)"
 }
 
 # Load nvm
-# export NVM_DIR="$HOME/.nvm"
-# . "/usr/local/opt/nvm/nvm.sh"
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/JJ/.nvm/versions/node/v11.9.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh
