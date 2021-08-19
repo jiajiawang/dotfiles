@@ -190,6 +190,10 @@ return require('packer').startup(function()
       vim.api.nvim_set_keymap('n', 'ga', '<plug>(EasyAlign)', { silent = true })
     end
   }
+  use {
+    'jiajiawang/gfmt.nvim',
+    run = 'go get github.com/jiajiawang/gfmt.nvim/src/gfmt'
+  }
 
   -- LSP
   use {
