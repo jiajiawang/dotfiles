@@ -1,0 +1,12 @@
+% sed
+# word substitution
+sed s/old/new/
+
+# multiple word substituion
+sed -e 's/a/A/g' -e 's/e/E/g' -e 's/i/I/g' -e 's/o/O/g' -e 's/u/U/g'
+
+# regexp substitution - wrap every word with ()
+sed 's/[a-z]*/(&)/g'
+
+# extended regexp substitution - wrap every word with ()
+sed 's/\([a-z]*\)/(\1)/g'

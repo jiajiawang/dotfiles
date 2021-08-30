@@ -15,10 +15,10 @@ vim.cmd 'autocmd BufWritePost plugins.lua PackerCompile' -- Auto compile when th
 
 -- disable unused buildin plugins
 local disabled_built_ins = {
-    "netrw",
+    --[[ "netrw",
     "netrwPlugin",
     "netrwSettings",
-    "netrwFileHandlers",
+    "netrwFileHandlers", ]]
     "gzip",
     "zip",
     "zipPlugin",
@@ -80,12 +80,12 @@ return require('packer').startup(function()
   use {
     'junegunn/fzf.vim',
     requires = {
-      '/usr/local/opt/fzf',
-      setup = function()
-        vim.g.fzf_history_dir = '~/.fzf-history'
-        vim.cmd([[let $FZF_DEFAULT_OPTS='--layout=reverse']])
-      end
+      '/usr/local/opt/fzf'
     },
+    setup = function()
+      vim.g.fzf_history_dir = '~/.local/share/fzf-vim-history'
+      -- vim.cmd([[let $FZF_DEFAULT_OPTS='--layout=reverse']])
+    end,
     config = function()
       vim.api.nvim_set_keymap('n', '<C-p>', ':Files<CR>', { silent = true })
       vim.api.nvim_set_keymap('n', ';', ':Buffers<CR>', { silent = true })
@@ -132,6 +132,12 @@ return require('packer').startup(function()
       vim.g.AutoPairsFlyMode=1
     end
   }
+  --[[ use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup({})
+    end
+  } ]]
   use 'tpope/vim-surround'
   use 'tpope/vim-repeat'
   use 'tpope/vim-abolish'
@@ -160,9 +166,9 @@ return require('packer').startup(function()
     'svermeulen/vim-cutlass',
     config = function()
       vim.api.nvim_set_keymap('n', 'x', 'd', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('x', 'x', 'd', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('v', 'x', 'd', { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', 'xx', 'dd', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', 'X', 'D', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('v', 'X', 'D', { noremap = true, silent = true })
     end
   }
   use {
@@ -201,16 +207,16 @@ return require('packer').startup(function()
     config = function()
       require'lspconfig'.solargraph.setup{}
       require'lspconfig'.tsserver.setup{}
-      vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
     end
   }
   use {
     'glepnir/lspsaga.nvim',
     config = function()
       require'lspsaga'.init_lsp_saga()
+      vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua require"lspsaga.provider".preview_definition()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', 'gh', '<cmd>lua require"lspsaga.provider".lsp_finder()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>lua require("lspsaga.codeaction").code_action()<CR>', { noremap = true, silent = true })
     end
   }
 
@@ -291,11 +297,11 @@ return require('packer').startup(function()
 
 
   -- Ruby
-  use {'tpope/vim-rails', ft='rb'}
-  use {'tpope/vim-bundler', ft='rb'}
-  use {'tpope/vim-cucumber', ft='rb'}
-  use {'jiajiawang/vim-ruby-helper', ft='rb'}
-  use {'jiajiawang/vim-rubocop', ft='rb'}
+  use {'tpope/vim-rails'}
+  use {'tpope/vim-bundler'}
+  use {'tpope/vim-cucumber'}
+  use {'jiajiawang/vim-ruby-helper'}
+  use {'jiajiawang/vim-rubocop'}
 
   -- Markdown, Doc writing
   use {

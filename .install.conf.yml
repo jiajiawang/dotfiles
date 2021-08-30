@@ -3,14 +3,17 @@
 - create:
   - ~/workspace
   - ~/.config
+  - ~/.config/tmux
   - ~/.tmux/plugins
   - ~/.rbenv
+  - ~/.local/share
+  - ~/.local/share/navi
 
 - link:
     ~/.config/nvim: vim/
     ~/.dotfiles: ""
     ~/.vim: vim/
-    ~/.tmux.conf: tmux.conf
+    ~/.config/tmux/tmux.conf: tmux.conf
     ~/.tmux/plugins/tpm: tmux-plugins/tpm
     ~/.zprezto: .zprezto/
     ~/.zshenv: zshenv
@@ -23,8 +26,11 @@
     ~/.rbenv/default-gems: rbenv/default-gems
     ~/.gemrc: gemrc
     ~/.reek.yml: reek.yml
-    ~/.pryrc: pryrc.rb
-
+    ~/.config/pry/pryrc: pryrc.rb
+    ~/.config/navi.yml: navi/navi.yml
+    ~/.local/share/navi/my_cheats: navi/my_cheats/
+    ~/.local/share/navi/others: "~/Library/Application\ Support/navi/cheats"
+    ~/.config/alacritty.yml: alacritty.yml
 - shell:
   - [cp -n zshenv.local.sample ~/.zshenv.local || echo]
   - [cp -n wtf.sample.yml ~/.config/wtf/config.yml || echo]

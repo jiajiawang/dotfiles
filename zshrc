@@ -8,6 +8,7 @@ fi
 bindkey "^[f" forward-word
 
 # Source navi
+export NAVI_CONFIG="$XDG_CONFIG_HOME/navi.yml"
 source <(navi widget zsh)
 
 # Customize to your needs...
@@ -52,6 +53,7 @@ _gen_fzf_default_opts() {
 
   # Solarized Dark color scheme for fzf
   export FZF_DEFAULT_OPTS="
+    --history=$XDG_DATA_HOME/fzf-history
     --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
     --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
   "

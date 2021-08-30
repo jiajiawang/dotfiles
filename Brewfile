@@ -33,6 +33,7 @@ brew "universal-ctags"
 brew "wget"
 brew "wtfutil"
 
+cask "alacritty"
 cask "alfred"
 cask "appcleaner"
 cask "aws-vault"
