@@ -7,6 +7,7 @@ fi
 
 bindkey "^[f" forward-word
 
+
 # Source navi
 export NAVI_CONFIG="$XDG_CONFIG_HOME/navi.yml"
 source <(navi widget zsh)
@@ -72,15 +73,17 @@ alias fzfp="fzf-tmux $FZF_TMUX_OPTS"
 fbb() {
   git branch -vv | \
     fzfp --bind "enter:execute(echo {} | awk '{print \$1}' | xargs git checkout)+abort" \
+    --bind "ctrl-f:execute(git fetch)+reload(git branch -vv)" \
     --bind "ctrl-d:execute(echo {} | awk '{print \$1}' | xargs git branch --delete)+reload(git branch -vv)" \
     --bind "ctrl-x:execute(echo {} | awk '{print \$1}' | xargs git branch -D)+reload(git branch -vv)" \
     --bind "ctrl-r:reload(git branch -r -vv)" \
     --bind "ctrl-t:reload(git branch -vv)" \
-    --preview "echo {} | awk '{print \$1}' | xargs git log --name-only" \
+    --preview "echo {} | awk '{print \$1}' | xargs git log --name-only -20" \
     --header 'Press ENTER to checkout branch
 CTRL-R to load only remote branches
 CTRL-T to load only local branches
 CTRL-D to delete branch
+CTRL-F to git fetch
 CTRL-X to force delete branch'
 }
 # fcoc - checkout git commit
@@ -119,12 +122,32 @@ fkill() {
 }
 
 hubpr() {
+  jid=$(git rev-parse --abbrev-ref HEAD | awk -F- '{print $1 "-" $2}')
   hub pull-request -o -F - --edit <<< "$(git log -1 --pretty=format:%s)
 
-https://rangeme.atlassian.net/browse/$(git rev-parse --abbrev-ref HEAD | cut -c1-7)
+[$jid](https://rangeme.atlassian.net/browse/$jid)
 $(git log -1 --pretty=format:%b)"
 }
 
 # Load nvm
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+
+save_clipboard_to_cheatsheet() {
+  echo "$(pbpaste)"
+
+  read -p "tags: " varname
+
+  echo $varname
+}
+zle -N save_clipboard_to_cheatsheet
+bindkey '^T' save_clipboard_to_cheatsheet
+
+# autocomplete_from_tmux() {
+#   local word
+#   word="$(tmux capture-pane -pS -100000 | tr ' ' '\012' | fzfp -1 -0 --no-sort +m)"
+#   LBUFFER=${LBUFFER}${word}
+# }
+# zle -N autocomplete_from_tmux
+# bindkey '^T' autocomplete_from_tmux
+alias ss="sgpt --shell"

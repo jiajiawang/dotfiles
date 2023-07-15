@@ -3,4 +3,5 @@
 aws-vault exec <profile> -- aws ssm start-session --target <instance_id>
 
 $ profile: grep "profile" ~/.aws/config | sed -e 's/\[profile//g' -e 's/\]//g'
-$ instance_id: aws-vault exec $profile -- aws ec2 describe-instances --filters "Name=tag:ConsoleAccessType,Values=read_only,read_write" | jq '[.Reservations | .[] | .Instances | .[0] | { id: .InstanceId, access: .Tags[] }]' | jq '.[] | select(.access.Key == "Name") | {(.access.Value): .id}' | grep "i-" | sed 's/\"//g' --- --column 2 --delimiter ':'
+$ instance_id: aws-vault exec $profile -- aws ec2 describe-instances | jq '[.Reservations | .[] | .Instances | .[0] | { id: .InstanceId, access: .Tags[] }]' | jq '.[] | select(.access.Key == "Name") | {(.access.Value): .id}' | grep "i-" | sed 's/\"//g' --- --column 2 --delimiter ':'
+# $ instance_id: aws-vault exec $profile -- aws ec2 describe-instances --filters "Name=tag:ConsoleAccessType,Values=read_only,read_write" | jq '[.Reservations | .[] | .Instances | .[0] | { id: .InstanceId, access: .Tags[] }]' | jq '.[] | select(.access.Key == "Name") | {(.access.Value): .id}' | grep "i-" | sed 's/\"//g' --- --column 2 --delimiter ':'

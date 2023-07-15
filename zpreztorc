@@ -25,7 +25,8 @@ zstyle ':prezto:load' pmodule \
   'history-substring-search' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt'
+  'prompt' \
+  'fzf-tab'
 
 #
 # Editor
@@ -151,3 +152,6 @@ zstyle ':prezto:module:prompt' theme 'jiajia'
 
 # Integrate with iTerm2.
 # zstyle ':prezto:module:tmux:iterm' integrate 'yes'
+
+# https://github.com/Aloxaf/fzf-tab/wiki/Configuration
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
