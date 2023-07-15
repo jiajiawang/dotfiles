@@ -1,0 +1,20 @@
+gui:
+  theme:
+    selectedLineBgColor:
+      - reverse
+    selectedRangeBgColor:
+      - reverse
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+
+customCommands:
+  - key: 'U'
+    command: 'git pull origin master --rebase'
+    context: 'localBranches'
+    description: 'rebase onto latest origin master'
+  - key: 'L'
+    command: 'git push --force-with-lease'
+    context: 'localBranches'
+    description: 'force push with lease'
