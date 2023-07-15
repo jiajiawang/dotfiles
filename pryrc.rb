@@ -1,5 +1,7 @@
 # vim: set ft=ruby:
 # .pryrc
+#
+# gem install rb-readline -v 0.5.5
 
 # use this method to load gems outside bundler
 def require_global_gem path, gem
