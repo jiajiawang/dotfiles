@@ -26,8 +26,8 @@ endsnippet
 
 snippet expbp "expect().toExist" b
 expect(
-  subject().find("$1")
-).toExist();
+  subject().queryBy$1
+).toBeInTheDocument();
 endsnippet
 
 snippet expbe "expect().not.toExist" b
@@ -48,10 +48,10 @@ expect(
 ).toHaveProp("$2", $3);
 endsnippet
 
-snippet expht "expect().toHaveText" b
+snippet expht "expect().toHaveTextContent" b
 expect(
-  subject().find("$1")
-).toHaveText("$2");
+  subject()${1:.container}
+).toHaveTextContent("$2");
 endsnippet
 
 snippet exphbc "epext().toHaveBeenCalled()"

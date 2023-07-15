@@ -15,10 +15,10 @@ vim.cmd 'autocmd BufWritePost plugins.lua PackerCompile' -- Auto compile when th
 
 -- disable unused buildin plugins
 local disabled_built_ins = {
-    --[[ "netrw",
+    "netrw",
     "netrwPlugin",
     "netrwSettings",
-    "netrwFileHandlers", ]]
+    "netrwFileHandlers",
     "gzip",
     "zip",
     "zipPlugin",
@@ -57,7 +57,9 @@ return require('packer').startup(function()
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require "plugins.nvim-treesitter"
+      require "nvim-treesitter.configs".setup {
+
+      }
     end
   }
   use {
@@ -72,11 +74,30 @@ return require('packer').startup(function()
     -- cmd = { 'NvimTreeToggle', 'NvimTreeFindFile' },
     -- keys = { '<leader>to', '<leader>tf' }
     config = function()
-      vim.g.nvim_tree_disable_netrw = 0
+      require'nvim-tree'.setup({})
+      -- vim.g.nvim_tree_disable_netrw = 0
       vim.api.nvim_set_keymap('n', '<leader>to', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
     end
   }
+  use 'tiagofumo/vim-nerdtree-syntax-highlight'
+  --[[ use {
+    'ms-jpq/chadtree',
+    branch = 'chad',
+    run = ':CHADdeps',
+    config = function()
+      vim.g.chadtree_settings = {
+        options = {
+          follow = true
+        },
+        theme = {
+          text_colour_set = 'nerdtree_syntax_dark'
+        },
+      }
+      vim.api.nvim_set_keymap('n', '<leader>to', '<cmd>CHADopen<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
+    end
+  } ]]
   use {
     'junegunn/fzf.vim',
     requires = {
@@ -87,6 +108,8 @@ return require('packer').startup(function()
       -- vim.cmd([[let $FZF_DEFAULT_OPTS='--layout=reverse']])
     end,
     config = function()
+      vim.cmd([[command! -bang -nargs=* MyAg call fzf#vim#ag(<q-args>, { 'options': '--preview "linestart=\$(expr {+2} - 5); if [ \$linestart -lt 0 ]; then linestart=0; fi; lineend=\$(expr {+2} + 5); bat --theme="OneHalfDark" --style=numbers,changes --color=always --line-range \$linestart:\$lineend {+1}" --delimiter : --nth 4..' }, <bang>0)]])
+      vim.api.nvim_set_keymap('n', '<C-f>', ':MyAg<CR>', { silent = true })
       vim.api.nvim_set_keymap('n', '<C-p>', ':Files<CR>', { silent = true })
       vim.api.nvim_set_keymap('n', ';', ':Buffers<CR>', { silent = true })
       vim.api.nvim_set_keymap('n', '<C-g>', ':BLines<CR>', { silent = true })
@@ -112,12 +135,19 @@ return require('packer').startup(function()
   use {
     'ms-jpq/coq_nvim',
     branch = 'coq',
-    run = 'COQdeps',
-    config = function()
+    run = ':COQdeps',
+    setup = function()
       vim.g.coq_settings = {
-        ["keymap.jump_to_mark"] = '<C-N>',
-        ["display.preview.positions"] = {
-          north = 4, south = 3, west = 2, east = 1
+        auto_start = true,
+        keymap = {
+          jump_to_mark = "<C-N>",
+          ["repeat"] = "<leader>8",
+        },
+        display = {
+          ["preview.positions"] = {
+            north = 4, south = 3, west = 2, east = 1
+          },
+          ["pum.fast_close"] = false,
         },
       }
     end
@@ -125,6 +155,14 @@ return require('packer').startup(function()
   use {
     'ms-jpq/coq.artifacts',
     branch = 'artifacts'
+  }
+  use {
+    'ms-jpq/coq.thirdparty',
+    config = function()
+      require("coq_3p") {
+        { src = "copilot", short_name = "COP", accept_key = "<c-f>" }
+      }
+    end
   }
   use {
     'jiangmiao/auto-pairs',
@@ -180,13 +218,15 @@ return require('packer').startup(function()
     config = function()
       vim.api.nvim_set_keymap('n', 'p', '<plug>(YoinkPaste_p)', { silent = true })
       vim.api.nvim_set_keymap('n', 'P', '<plug>(YoinkPaste_P)', { silent = true })
-      vim.api.nvim_set_keymap('n', '<C-B>', '<plug>(YoinkPostPasteSwapBack)', { silent = true })
+      -- vim.api.nvim_set_keymap('n', '<C-B>', '<plug>(YoinkPostPasteSwapBack)', { silent = true })
     end
   }
   use {
     'svermeulen/vim-subversive',
     config = function()
-      vim.api.nvim_set_keymap('n', 's', '<plug>(SubversiveSubstitute)', { silent = true })
+      vim.api.nvim_set_keymap('n', '<leader><leader>s', '<plug>(SubversiveSubstitute)', { silent = true })
+      vim.api.nvim_set_keymap('n', '<leader><leader>ss', '<plug>(SubversiveSubstituteLine)', { silent = true })
+      vim.api.nvim_set_keymap('n', '<leader><leader>S', '<plug>(SubversiveSubstituteToEndOfLine)', { silent = true })
     end
   }
   use {
@@ -200,23 +240,52 @@ return require('packer').startup(function()
     'jiajiawang/gfmt.nvim',
     run = 'go get github.com/jiajiawang/gfmt.nvim/src/gfmt'
   }
+  use {
+    'mattn/emmet-vim',
+    config = function()
+      vim.g.user_emmet_settings = {
+        indentation = '  '
+      }
+    end
+  }
+  use {
+    'AndrewRadev/splitjoin.vim',
+    config = function()
+      vim.g.splitjoin_ruby_curly_braces = 0
+      vim.g.splitjoin_ruby_hanging_args = 0
+    end
+  }
+  use {
+    'github/copilot.vim',
+    run = ':Copilot setup'
+  }
 
   -- LSP
   use {
     'neovim/nvim-lspconfig',
     config = function()
-      require'lspconfig'.solargraph.setup{}
+      -- require'lspconfig'.solargraph.setup{}
       require'lspconfig'.tsserver.setup{}
       vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
     end
   }
-  use {
+  --[[ use {
     'glepnir/lspsaga.nvim',
+    branch = "main",
     config = function()
-      require'lspsaga'.init_lsp_saga()
-      vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua require"lspsaga.provider".preview_definition()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', 'gh', '<cmd>lua require"lspsaga.provider".lsp_finder()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>lua require("lspsaga.codeaction").code_action()<CR>', { noremap = true, silent = true })
+      local saga = require("lspsaga")
+      saga.init_lsp_saga({
+      })
+      vim.api.nvim_set_keymap('n', 'gd', '<cmd>Lspsaga peek_definition<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', 'gh', '<cmd>Lspsaga lsp_finder<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader><leader>k', '<cmd>Lspsaga hover_doc<CR>', { noremap = true, silent = true })
+    end
+  } ]]
+  use {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
     end
   }
 
@@ -233,15 +302,18 @@ return require('packer').startup(function()
       vim.g.ale_lint_on_insert_leave = 0
       vim.g.ale_lint_on_filetype_changed = 0
       vim.g.ale_linters = {
+        typescript = { 'eslint' }, 
         javascript = { 'eslint' }, 
         javascriptreact = { 'eslint' }, 
-        ruby = { 'reek', 'rubocop', 'ruby' }, 
+        ruby = { 'reek', 'rubocop', 'ruby', 'prettier' }, 
       }
       vim.g.ale_fixers = {
+        typescript = { 'prettier' }, 
         javascript = { 'prettier' }, 
         javascriptreact = { 'prettier' }, 
         css = { 'prettier' }, 
         scss = { 'prettier' }, 
+        ruby = { 'prettier' }, 
       }
       vim.g.ale_fix_on_save = 1
       vim.g.ale_emit_conflict_warnings = 0
@@ -255,14 +327,16 @@ return require('packer').startup(function()
   -- Git, github
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
+  use 'ThePrimeagen/git-worktree.nvim'
 
   -- Easymotion
-  use {
+  --[[ use {
     'Lokaltog/vim-easymotion',
     config = function()
+      vim.g.EasyMotion_smartcase = 1
       vim.api.nvim_set_keymap('n', 'f', "<Plug>(easymotion-overwin-f2)", {})
     end
-  }
+  } ]]
   use 'kana/vim-textobj-user'
   use 'nelstrom/vim-textobj-rubyblock'
   use 'michaeljsmith/vim-indent-object'
@@ -272,11 +346,29 @@ return require('packer').startup(function()
     as = 'hop',
     config = function()
       require'hop'.setup()
-      vim.api.nvim_set_keymap('n', '<space>w', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
-      vim.api.nvim_set_keymap('n', '<space>b', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
-      vim.api.nvim_set_keymap('n', '<space>l', "<cmd>lua require'hop'.hint_lines_skip_whitespace()<cr>", {})
+      vim.api.nvim_set_keymap('n', '<leader><leader>w', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
+      vim.api.nvim_set_keymap('n', '<leader><leader>b', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
+      vim.api.nvim_set_keymap('n', 'f', "<cmd>lua require'hop'.hint_char2({ multi_windows = true })<cr>", {})
+      vim.api.nvim_set_keymap('n', '<leader><leader>j', "<cmd>lua require'hop'.hint_lines({ multi_windows = true })<cr>", {})
     end
   } ]]
+  --[[ use {
+    'ggandor/lightspeed.nvim',
+    config = function()
+      vim.api.nvim_set_keymap('n', 'f', '<Plug>Lightspeed_omni_s', { silent = true })
+      vim.api.nvim_set_keymap('n', 'F', '<Plug>Lightspeed_omni_gs', { silent = true })
+    end
+  } ]]
+  use {
+    'ggandor/leap.nvim',
+    config = function()
+      require'leap'.setup {
+        case_insensitive = true,
+      }
+      require'leap'.set_default_keymaps()
+      vim.api.nvim_set_keymap('n', 'F', "<Plug>(leap-cross-window)", {})
+    end
+  }
 
   -- Good looking
   use 'kyazdani42/nvim-web-devicons'
@@ -304,14 +396,84 @@ return require('packer').startup(function()
   use {'jiajiawang/vim-rubocop'}
 
   -- Markdown, Doc writing
+  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} },
+    config = function()
+      local actions = require "telescope.actions"
+      require'telescope'.setup{
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+            }
+          }
+        },
+        extensions = {
+          fzf = {
+            fuzzy = true,                    -- false will only do exact matching
+            override_generic_sorter = true,  -- override the generic sorter
+            override_file_sorter = true,     -- override the file sorter
+            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                             -- the default case_mode is "smart_case"
+          }
+        }
+      }
+      require('telescope').load_extension('fzf')
+      require('telescope').load_extension('git_worktree')
+      vim.api.nvim_set_keymap('n', '<leader>wt', '<cmd>lua require("telescope").extensions.git_worktree.git_worktrees()<cr>', { noremap = true })
+      vim.api.nvim_set_keymap('n', '<leader>wc', '<cmd>lua require("telescope").extensions.git_worktree.create_git_worktree()<cr>', { noremap = true })
+    end
+  }
+  --[[ use {
+    'oberblastmeister/neuron.nvim',
+    branch = 'unstable',
+    as = 'neuron',
+    config = function()
+      require'neuron'.setup {
+        virtual_titles = true,
+        mappings = true,
+        run = nil, -- function to run when in neuron dir
+        neuron_dir = "~/neuron", -- the directory of all of your notes, expanded by default (currently supports only one directory for notes, find a way to detect neuron.dhall to use any directory)
+        leader = "gz", -- the leader key to for all mappings, remember with 'go zettel'
+      }
+    end
+  } ]]
   use {
     'Pocco81/TrueZen.nvim',
     cmd = { "TZAtaraxis", "TZFocus", "TZMinimalist" },
   }
   use {
     'npxbr/glow.nvim',
-    run = 'GlowInstall',
+    run = ':GlowInstall',
     cmd = 'Glow'
+  }
+
+  -- Yank
+  use {
+    "AckslD/nvim-neoclip.lua",
+    config = function()
+      require('neoclip').setup({
+        on_paste = {
+          set_reg = true,
+        },
+        keys = {
+          telescope = {
+            i = {
+              select = '<c-s>',
+              paste = '<cr>',
+              paste_behind = '<s-cr>',
+              custom = {},
+            },
+          },
+        },
+      })
+      require('telescope').load_extension('neoclip')
+      vim.api.nvim_set_keymap('n', '<C-B>', '<cmd>Telescope neoclip<cr>', { silent = true })
+    end
   }
 
   -- Tmux & Terminal
@@ -329,4 +491,26 @@ return require('packer').startup(function()
     end
   }
   use 'preservim/vimux'
+
+  -- Browser
+  use {
+    'glacambre/firenvim',
+    run = function() vim.fn['firenvim#install'](0) end,
+    setup = function()
+      vim.g.firenvim_config = {
+        globalSettings = {
+          alt = 'all'
+        },
+        localSettings = {
+          ['.*'] = {
+              cmdline = 'neovim',
+              content = 'text',
+              priority = 0,
+              selector = 'textarea',
+              takeover = 'never'
+          },
+        }
+      }
+    end
+  }
 end)

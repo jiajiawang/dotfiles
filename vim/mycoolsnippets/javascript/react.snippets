@@ -62,6 +62,10 @@ snippet styles "div styles" b
 </div>
 endsnippet
 
+snippet cn "className"
+className={ styles.$1 }
+endsnippet
+
 snippet ctest "Component test" b
 import React from "react";
 import $1 from "components/$2`!p snip.rv=to_kebab_case(t[1])`";

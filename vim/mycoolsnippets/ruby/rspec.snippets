@@ -13,3 +13,7 @@ endsnippet
 snippet expr "expected to receive"
 expect($1).to receive(:$2)${3:.with($4)}
 endsnippet
+
+snippet lets "bs"
+let(:$1) { build_stubbed :${2:$1} }
+endsnippet

@@ -1,7 +1,7 @@
 require('plugins')
 
 -- options
-vim.o.shell = "/bin/bash"
+vim.o.shell = "/bin/zsh"
 vim.g.mapleader=','
 
 vim.cmd([[syn on]])
@@ -32,7 +32,7 @@ vim.cmd([[set expandtab]])
 vim.bo.textwidth=80
 vim.bo.formatoptions='cq'
 vim.wo.number=true
-vim.o.terse=true
+-- vim.o.terse=true
 vim.o.scrolloff=5
 vim.bo.complete=vim.bo.complete .. ',k,]'
 vim.o.previewheight=20
@@ -59,9 +59,51 @@ vim.api.nvim_set_keymap('n', '<leader>ww', ':w<CR>', { noremap = true, silent = 
 
 -- aucmd
 vim.cmd([[augroup startgroup]])
-vim.cmd([[autocmd VimEnter * COQnow]])
 vim.cmd([[au FocusLost * silent! wa]])
 vim.cmd([[autocmd FileType ruby let b:surround_45 = "do\n\r\nend"]])
 vim.cmd([[autocmd FileType javascriptreact UltiSnipsAddFiletypes javascript]])
 vim.cmd([[augroup END]])
 
+function _G.glow()
+  local current = vim.api.nvim_get_current_buf()
+  local file = vim.api.nvim_buf_get_name(0)
+  local lines = vim.api.nvim_buf_get_lines(current, 0, -1, false)
+  vim.cmd([[vsplit]])
+  buf = vim.api.nvim_create_buf(false, true)
+  vim.g.glow_buf = buf
+  vim.api.nvim_win_set_buf(0, buf)
+  vim.api.nvim_command("terminal")
+  local channel = vim.api.nvim_buf_get_option(buf, "channel")
+  vim.call("chansend", channel, "zsh\n")
+  vim.call("chansend", channel, string.format("clear; glow <(echo '%s')\n", table.concat(lines, "\n")))
+  --[[ vim.api.nvim_buf_call(buf, function()    vim.fn.termopen(string.format("clear; glow %s;", file))
+  end) ]]
+  vim.api.nvim_buf_attach(current, false, {
+    on_lines = function(lines, buf)
+      print("changed")
+      local glow_buf = vim.g.glow_buf
+      local channel = vim.api.nvim_buf_get_option(glow_buf, "channel")
+      local file = vim.api.nvim_buf_get_name(buf)
+      local glow_file = vim.api.nvim_buf_get_name(glow_buf)
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      print(file)
+      print(glow_file)
+      print(channel)
+      vim.call("chansend", channel, string.format("clear; glow <(echo '%s')\n", table.concat(lines, "\n")))
+      -- vim.api.nvim_buf_call(vim.g.glow_buf, function()
+        -- vim.fn.termopen(string.format("clear; glow %s;", file))
+      -- end)
+    end
+  })
+end
+
+function _G.dump(...)
+  local objects = vim.tbl_map(vim.inspect, {...})
+  print(unpack(objects))
+end
+
+function _G.browse(uri)
+  local path = vim.fn.shellescape(uri)
+  vim.cmd('! open '..path)
+end
+vim.cmd("command! -nargs=? Browse :lua browse('<args>')")
