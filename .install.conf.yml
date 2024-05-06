@@ -1,4 +1,4 @@
-- clean: ['~']
+- clean: ["~"]
 
 - create:
     - ~/workspace
@@ -33,11 +33,11 @@
     ~/.local/share/navi/my_cheats: navi/my_cheats/
     ~/.local/share/navi/others: "~/Library/Application\ Support/navi/cheats"
     ~/.config/alacritty.yml: alacritty.yml
-- shell:
-  - [cp -n zshenv.local.sample ~/.zshenv.local || echo]
-  - [cp -n wtf.sample.yml ~/.config/wtf/config.yml || echo]
-  - [git submodule update --init --recursive --remote, Installing submodules]
-  - [git submodule foreach git pull origin master, Updating submodules]
-  - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)", Installing brew]
-  - [brew bundle]
-  - [pip3 install neovim]
+# - shell:
+#   - [cp -n zshenv.local.sample ~/.zshenv.local || echo]
+#   - [cp -n wtf.sample.yml ~/.config/wtf/config.yml || echo]
+#   - [git submodule update --init --recursive --remote, Installing submodules]
+#   - [git submodule foreach git pull origin master, Updating submodules]
+#   - [hash brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)", Installing brew]
+#   - [brew bundle]
+#   - [pip3 install neovim]

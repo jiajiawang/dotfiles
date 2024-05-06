@@ -10,11 +10,20 @@ git:
     pager: delta --dark --paging=never
 
 customCommands:
-  - key: 'U'
-    command: 'git pull origin master --rebase'
-    context: 'localBranches'
-    description: 'rebase onto latest origin master'
-  - key: 'L'
-    command: 'git push --force-with-lease'
-    context: 'localBranches'
-    description: 'force push with lease'
+  - key: "U"
+    command: "git pull origin master --rebase"
+    context: "localBranches"
+    description: "rebase onto latest origin master"
+  - key: "L"
+    command: "git push --force-with-lease"
+    context: "localBranches"
+    description: "force push with lease"
+  - key: "<c-u>"
+    command: "git uncommit"
+    context: "localBranches"
+    description: "undo last commit"
+  # - key: "I"
+  #   command: "hubpr"
+  #   context: "localBranches"
+  #   description: "create github pull request"
+  #   subprocess: true

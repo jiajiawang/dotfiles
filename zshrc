@@ -21,7 +21,7 @@ fpath=(/Users/JJ/.zsh/completion $fpath)
 
 # set go path
 export GOPATH=~/workspace/go
-export PATH=/usr/local/opt/postgresql@11/bin:$PATH:$GOPATH/bin
+export PATH="/opt/homebrew/opt/postgresql@11/bin:$GOPATH/bin:$PATH"
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
@@ -131,7 +131,8 @@ $(git log -1 --pretty=format:%b)"
 
 # Load nvm
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  # [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 save_clipboard_to_cheatsheet() {
   echo "$(pbpaste)"
@@ -151,3 +152,18 @@ bindkey '^T' save_clipboard_to_cheatsheet
 # zle -N autocomplete_from_tmux
 # bindkey '^T' autocomplete_from_tmux
 alias ss="sgpt --shell"
+
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+export NODE_OPTIONS=--openssl-legacy-provider
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    alias nvim=nvr -cc split --remote-wait +'set bufhidden=wipe'
+fi
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+    export EDITOR="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+    export VISUAL="nvim"
+    export EDITOR="nvim"
+fi
